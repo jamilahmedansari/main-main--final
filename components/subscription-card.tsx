@@ -215,7 +215,11 @@ export function SubscriptionCard() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              Coupon applied! You save ${discount.toFixed(2)}
+              {discount >= selectedPlanData?.price ? (
+                <span className="font-medium">Coupon applied! Your subscription is now FREE</span>
+              ) : (
+                <span>Coupon applied! You save ${discount.toFixed(2)}</span>
+              )}
             </div>
           </div>
         )}
@@ -253,7 +257,7 @@ export function SubscriptionCard() {
           </div>
         </div>
         <Button onClick={handleSubscribe} disabled={loading} className="w-full" size="lg">
-          {loading ? 'Processing...' : 'Subscribe Now'}
+          {loading ? 'Processing...' : finalPrice === 0 ? 'Get Started' : 'Subscribe Now'}
         </Button>
         <p className="text-xs text-slate-500 text-center mt-3">
           By subscribing, you agree to our terms of service

@@ -255,6 +255,30 @@ export async function POST(request: NextRequest) {
       throw new Error('Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.')
     }
 
+    // Create subscription record as 'pending' before payment
+    const { data: pendingSubscription, error: subError } = await supabase
+      .from('subscriptions')
+      .insert({
+        user_id: user.id,
+        plan: planType,
+        plan_type: planType,
+        status: 'pending',
+        price: finalPrice,
+        discount: discountAmount,
+        coupon_code: couponCode || null,
+        credits_remaining: 0, // No credits until payment confirmed
+        remaining_letters: 0,
+        current_period_start: new Date().toISOString(),
+        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      })
+      .select()
+      .single()
+
+    if (subError) {
+      console.error('[Checkout] Failed to create pending subscription:', subError)
+      throw new Error(`Failed to create subscription: ${subError.message}`)
+    }
+
     // Create Stripe Checkout Session for paid plans
     const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
@@ -279,6 +303,7 @@ export async function POST(request: NextRequest) {
       client_reference_id: user.id,
       metadata: {
         user_id: user.id,
+        subscription_id: pendingSubscription.id,
         plan_type: planType,
         letters: selectedPlan.letters.toString(),
         base_price: basePrice.toString(),

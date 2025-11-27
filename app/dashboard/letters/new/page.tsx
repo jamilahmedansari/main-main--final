@@ -113,6 +113,21 @@ export default function NewLetterPage() {
         return
       }
 
+      // Check if user has generated any letters before (Free Trial Check)
+      const { count } = await supabase
+        .from("letters")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+
+      const isFreeTrial = (count || 0) === 0
+
+      // If free trial, user can generate without subscription
+      if (isFreeTrial) {
+        setHasSubscription(true)
+        setIsChecking(false)
+        return
+      }
+
       // Check for active subscription with credits
       const { data: subscriptions, error } = await supabase
         .from('subscriptions')

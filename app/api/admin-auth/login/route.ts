@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminCredentials, createAdminSession } from '@/lib/auth/admin-session'
 import { createClient } from '@/lib/supabase/server'
+import { isAdminAuthConfigured } from '@/lib/admin/config-validator'
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if admin authentication is properly configured
+    if (!isAdminAuthConfigured()) {
+      console.error('[AdminAuth] Admin authentication not configured')
+      return NextResponse.json(
+        { error: 'Admin authentication is not properly configured' },
+        { status: 500 }
+      )
+    }
+
     const body = await request.json()
     const { email, password, portalKey } = body
 
