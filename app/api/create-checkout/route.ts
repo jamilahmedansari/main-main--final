@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
 const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-11-17.clover',
 }) : null
 
 const TEST_MODE = process.env.ENABLE_TEST_MODE === 'true'
@@ -72,10 +72,13 @@ export async function POST(request: NextRequest) {
         .insert({
           user_id: user.id,
           plan: planType,
+          plan_type: planType,
           status: 'active',
           price: finalPrice,
           discount: discountAmount,
           coupon_code: couponCode || null,
+          credits_remaining: selectedPlan.letters,
+          remaining_letters: selectedPlan.letters,
           current_period_start: new Date().toISOString(),
           current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
         })
@@ -172,10 +175,13 @@ export async function POST(request: NextRequest) {
         .insert({
           user_id: user.id,
           plan: planType,
+          plan_type: planType,
           status: 'active',
           price: finalPrice,
           discount: discountAmount,
           coupon_code: couponCode || null,
+          credits_remaining: selectedPlan.letters,
+          remaining_letters: selectedPlan.letters,
           current_period_start: new Date().toISOString(),
           current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
         })
