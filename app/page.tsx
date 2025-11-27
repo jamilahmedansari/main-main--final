@@ -473,20 +473,25 @@ export default function HomePage() {
   }
 
   // Authenticated user view - redirect to dashboard
-  if (profile?.role === 'subscriber') {
-    router.push('/dashboard')
-    return null
-  }
+  useEffect(() => {
+    if (profile?.role === 'subscriber') {
+      router.push('/dashboard/letters')
+    } else if (profile?.role === 'admin') {
+      router.push('/dashboard/admin/letters')
+    } else if (profile?.role === 'employee') {
+      router.push('/dashboard/commissions')
+    }
+  }, [profile?.role, router])
 
-  if (profile?.role === 'admin') {
-    router.push('/dashboard/admin')
-    return null
+  // Show loading state while redirecting
+  if (profile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-lg text-muted-foreground">Redirecting to your dashboard...</p>
+        </div>
+      </div>
+    )
   }
-
-  if (profile?.role === 'employee') {
-    router.push('/dashboard/commissions')
-    return null
-  }
-
-  return null
 }

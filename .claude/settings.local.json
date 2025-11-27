@@ -26,7 +26,8 @@
       "Bash(./supabase login:*)",
       "Bash(./supabase link:*)",
       "Bash(psql:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
