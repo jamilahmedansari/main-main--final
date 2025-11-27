@@ -20,7 +20,7 @@ export function GenerateButton({
   const buttonText = loading
     ? 'Generating...'
     : hasSubscription
-      ? 'Generate Attorney Draft'
+      ? 'Generate Letter'
       : 'Subscribe to Generate';
 
   return (
