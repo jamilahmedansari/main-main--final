@@ -68,14 +68,10 @@ export async function POST(request: NextRequest) {
         .insert({
           user_id: user.id,
           plan: planType,
-          plan_type: selectedPlan.planType,
           status: 'active',
           price: finalPrice,
           discount: discountAmount,
           coupon_code: couponCode || null,
-          remaining_letters: selectedPlan.letters,
-          credits_remaining: selectedPlan.letters,
-          last_reset_at: new Date().toISOString(),
           current_period_start: new Date().toISOString(),
           current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
         })
@@ -172,14 +168,10 @@ export async function POST(request: NextRequest) {
         .insert({
           user_id: user.id,
           plan: planType,
-          plan_type: selectedPlan.planType,
           status: 'active',
           price: finalPrice,
           discount: discountAmount,
           coupon_code: couponCode || null,
-          remaining_letters: selectedPlan.letters,
-          credits_remaining: selectedPlan.letters,
-          last_reset_at: new Date().toISOString(),
           current_period_start: new Date().toISOString(),
           current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
         })
