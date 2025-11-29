@@ -1,12 +1,19 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdminAuth, getAdminSession } from '@/lib/auth/admin-session'
+import { adminRateLimit, safeApplyRateLimit } from '@/lib/rate-limit-redis'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Apply rate limiting
+    const rateLimitResponse = await safeApplyRateLimit(request, adminRateLimit, 10, "15 m")
+    if (rateLimitResponse) {
+      return rateLimitResponse
+    }
+
     // Verify admin authentication
     const authError = await requireAdminAuth()
     if (authError) return authError

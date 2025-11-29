@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminCredentials, createAdminSession } from '@/lib/auth/admin-session'
 import { createClient } from '@/lib/supabase/server'
 import { isAdminAuthConfigured } from '@/lib/admin/config-validator'
+import { adminRateLimit, safeApplyRateLimit } from '@/lib/rate-limit-redis'
 
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResponse = await safeApplyRateLimit(request, adminRateLimit, 10, "15 m")
+    if (rateLimitResponse) {
+      return rateLimitResponse
+    }
+
     // Check if admin authentication is properly configured
     if (!isAdminAuthConfigured()) {
       console.error('[AdminAuth] Admin authentication not configured')

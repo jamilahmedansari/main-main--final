@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { subscriptionRateLimit, safeApplyRateLimit } from '@/lib/rate-limit-redis'
 
 const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-11-17.clover',
@@ -10,8 +11,14 @@ const TEST_MODE = process.env.ENABLE_TEST_MODE === 'true'
 
 export async function POST(request: NextRequest) {
   console.log('[Checkout] Request received, TEST_MODE:', TEST_MODE)
-  
+
   try {
+    // Apply rate limiting
+    const rateLimitResponse = await safeApplyRateLimit(request, subscriptionRateLimit, 3, "1 h")
+    if (rateLimitResponse) {
+      return rateLimitResponse
+    }
+
     const supabase = await createClient()
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()

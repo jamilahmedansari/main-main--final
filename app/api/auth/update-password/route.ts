@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { authRateLimit, safeApplyRateLimit } from '@/lib/rate-limit-redis'
 
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResponse = await safeApplyRateLimit(request, authRateLimit, 5, "15 m")
+    if (rateLimitResponse) {
+      return rateLimitResponse
+    }
+
     const { newPassword } = await request.json()
 
     if (!newPassword) {
