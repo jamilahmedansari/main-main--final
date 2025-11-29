@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:22-alpine
 WORKDIR /usr/src/app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 RUN npm install --silent
