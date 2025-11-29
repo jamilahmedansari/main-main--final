@@ -80,7 +80,61 @@ export async function POST(request: NextRequest) {
     const discountAmount = (basePrice * discount) / 100
     const finalPrice = basePrice - discountAmount
 
-    // If 100% discount, create subscription directly without payment
+    // Special handling for TALK3 coupon with test mode
+    if (couponCode && couponCode.toUpperCase() === 'TALK3' && TEST_MODE) {
+      console.log('[Checkout] TALK3 coupon in TEST MODE: Creating dummy subscription')
+
+      // Create subscription directly as if payment succeeded
+      const { data: subscription, error: subError } = await supabase
+        .from('subscriptions')
+        .insert({
+          user_id: user.id,
+          plan: planType,
+          plan_type: planType,
+          status: 'active',
+          price: 0, // Free for TALK3
+          discount: basePrice,
+          coupon_code: 'TALK3',
+          credits_remaining: selectedPlan.letters,
+          remaining_letters: selectedPlan.letters,
+          current_period_start: new Date().toISOString(),
+          current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        })
+        .select()
+        .single()
+
+      if (subError) {
+        console.error('[Checkout] TALK3 TEST MODE: Subscription creation error:', subError)
+        throw new Error(`Failed to create subscription: ${subError.message}`)
+      }
+
+      // Track coupon usage for TALK3 (but no commission)
+      await supabase
+        .from('coupon_usage')
+        .insert({
+          user_id: user.id,
+          coupon_code: 'TALK3',
+          employee_id: null,
+          subscription_id: subscription.id,
+          discount_percent: 100,
+          amount_before: basePrice,
+          amount_after: 0
+        })
+
+      console.log('[Checkout] TALK3 TEST MODE: Dummy subscription created successfully')
+
+      return NextResponse.json({
+        success: true,
+        testMode: true,
+        talk3Coupon: true,
+        subscriptionId: subscription.id,
+        letters: selectedPlan.letters,
+        message: 'TALK3 TEST MODE: Free subscription created successfully',
+        redirectUrl: `/dashboard/subscription?success=true&test=true&talk3=true`
+      })
+    }
+
+    // If 100% discount (non-TALK3), create subscription directly without payment
     if (finalPrice === 0) {
       const { data: subscription, error: subError } = await supabase
         .from('subscriptions')

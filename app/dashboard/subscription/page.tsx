@@ -6,6 +6,7 @@ import { SubscriptionCard } from '@/components/subscription-card'
 import { PaymentVerifier } from '@/components/payment-verifier'
 import { format } from 'date-fns'
 import { Suspense } from 'react'
+import SuccessMessage from '@/components/success-message'
 
 export default async function SubscriptionPage() {
   const { profile } = await getUser()
@@ -29,6 +30,9 @@ export default async function SubscriptionPage() {
     <DashboardLayout>
       <Suspense fallback={null}>
         <PaymentVerifier />
+      </Suspense>
+      <Suspense fallback={null}>
+        <SuccessMessage />
       </Suspense>
       <h1 className="text-3xl font-bold text-foreground mb-8">Subscription</h1>
 
