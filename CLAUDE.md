@@ -740,3 +740,4 @@ Set up monthly subscription reset:
 **Project Status**: Production-ready with active development
 
 **Key Contributors**: Development team actively maintaining and enhancing the platform
+- this is pnpm install and pnpm run dev
