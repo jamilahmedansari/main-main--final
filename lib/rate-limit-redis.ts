@@ -52,7 +52,7 @@ function getClientIP(request: NextRequest): string {
     return cfConnectingIP
   }
 
-  return request.ip || 'unknown'
+  return 'unknown'
 }
 
 // Helper function to apply rate limiting

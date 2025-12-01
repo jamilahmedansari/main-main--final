@@ -132,7 +132,7 @@ const PricingSwitch = ({ onSwitch }: { onSwitch: (value: string) => void }) => {
 
 export default function PricingSection() {
   const [isSubscription, setIsSubscription] = useState(false);
-  const pricingRef = useRef<HTMLDivElement>(null);
+  const pricingRef = useRef<HTMLDivElement | null>(null);
 
   const revealVariants = {
     visible: (i: number) => ({
