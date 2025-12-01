@@ -44,6 +44,8 @@ next-env.d.ts
 
 # Shell scripts with secrets
 claude_code_zai_env.sh
+vercel-add-env.sh
+vercel-env.json
 
 # Misc
 *.log
