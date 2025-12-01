@@ -103,6 +103,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.0.14",
     "@vitest/ui": "^4.0.14",
     "baseline-browser-mapping": "^2.8.32",
@@ -114,6 +115,7 @@
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
     "typescript": "^5",
+    "vite": "^7.2.4",
     "vitest": "^4.0.14"
   }
 }
