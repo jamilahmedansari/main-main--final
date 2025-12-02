@@ -24,7 +24,7 @@ Subscriber → AI Draft Generation → Admin Review & Editing → Approval → S
 ## 🏗️ Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 16 with App Router (React 19)
+- **Framework**: Next.js 15 with App Router (React 19)
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4.1+ with custom design system
 - **UI Components**: shadcn/ui (Radix UI primitives)

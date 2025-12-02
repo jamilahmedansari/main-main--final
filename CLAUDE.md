@@ -16,7 +16,7 @@ Talk-To-My-Lawyer is a production-ready SaaS platform that generates legal lette
 ## Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 16 with App Router (React 19)
+- **Framework**: Next.js 15 with App Router (React 19)
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4.1+ with custom design system
 - **UI Components**: shadcn/ui (Radix UI primitives)
