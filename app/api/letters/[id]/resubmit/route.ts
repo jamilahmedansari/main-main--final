@@ -106,7 +106,7 @@ export async function POST(
       // Deduct credit if not free trial
       if (!isFreeTrial) {
         const { data: canDeduct, error: deductError } = await supabase.rpc("deduct_letter_allowance", {
-          u_id: user.id,
+          user_uuid: user.id,
         })
 
         if (deductError || !canDeduct) {

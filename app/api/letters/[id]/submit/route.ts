@@ -23,7 +23,7 @@ export async function POST(
 
     if (!isFreeTrial) {
       const { data: canDeduct, error: deductError } = await supabase
-        .rpc('deduct_letter_allowance', { u_id: user.id })
+        .rpc('deduct_letter_allowance', { user_uuid: user.id })
 
       if (deductError || !canDeduct) {
         return NextResponse.json({ 
