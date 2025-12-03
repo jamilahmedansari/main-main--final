@@ -996,11 +996,26 @@ body {
     0 16px 32px -8px rgba(147, 51, 234, 0.15);
 }
 
+/* Gold accent colors */
+:root {
+  --gold-50: #fefce8;
+  --gold-100: #fef9c3;
+  --gold-200: #fef08a;
+  --gold-300: #fde047;
+  --gold-400: #facc15;
+  --gold-500: #eab308;
+  --gold-600: #ca8a04;
+  --gold-700: #a16207;
+  --gold-800: #854d0e;
+  --gold-900: #713f12;
+  --gold-shine: linear-gradient(135deg, #f5d061 0%, #e6b422 25%, #ffd700 50%, #e6b422 75%, #f5d061 100%);
+}
+
 /* Enhanced Blue Running Border Animation */
 .btn-running-border {
   position: relative !important;
   overflow: hidden !important;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #0ea5e9 100%) !important;
   border: none !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
