@@ -1,13 +1,21 @@
 # Dependencies
 node_modules/
 
-# Environment variables
+# Environment variables - NEVER commit these
 .env
 .env.local
 .env*.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
+
+# Sensitive documentation - NEVER commit files with actual secrets
+VERCEL_ENV_SETUP.md
+*_SECRETS.md
+*_CREDENTIALS.md
+*.secrets
+*.credentials
 
 # Next.js
 .next/
