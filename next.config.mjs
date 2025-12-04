@@ -6,6 +6,13 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'mxhccjykkxbdvchmpqej.supabase.co',
+        pathname: '/storage/**',
+      },
+    ],
   },
   allowedDevOrigins: ['localhost', '127.0.0.1'],
   async headers() {

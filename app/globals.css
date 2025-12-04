@@ -1284,3 +1284,121 @@ body {
     display: none !important;
   }
 }
+
+/* Minimal Generate Letter Button with Shiny Running Border */
+.generate-letter-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.generate-letter-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 25%,
+    #199df4 35%,
+    #00d4ff 45%,
+    #fff 50%,
+    #00d4ff 55%,
+    #199df4 65%,
+    transparent 75%,
+    transparent 100%
+  );
+  background-size: 300% 100%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: glimmer-border 3s linear infinite;
+  z-index: -1;
+}
+
+.generate-letter-btn::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 6px;
+  z-index: -1;
+}
+
+.generate-letter-btn .btn-text {
+  position: relative;
+  z-index: 2;
+}
+
+.generate-letter-btn .btn-icon {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.generate-letter-btn:hover .btn-icon {
+  transform: translateX(4px);
+}
+
+.generate-letter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(25, 157, 244, 0.3);
+}
+
+.generate-letter-btn:hover::before {
+  animation-duration: 1.5s;
+}
+
+.generate-letter-btn:active {
+  transform: translateY(0);
+}
+
+.generate-letter-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.generate-letter-btn:disabled:hover {
+  box-shadow: none;
+}
+
+@keyframes glimmer-border {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: -100% 50%;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .generate-letter-btn::before {
+    animation: none;
+    background: linear-gradient(90deg, #199df4, #00d4ff, #199df4);
+    background-size: 100% 100%;
+  }
+  
+  .generate-letter-btn,
+  .generate-letter-btn .btn-icon {
+    transition: none;
+  }
+}
