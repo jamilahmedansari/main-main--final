@@ -1,5 +1,7 @@
 'use client'
 
+import GenerateLetterButton from './ui/generate-letter-button'
+
 interface GenerateButtonProps {
   loading?: boolean;
   disabled?: boolean;
@@ -9,6 +11,10 @@ interface GenerateButtonProps {
   className?: string;
 }
 
+/**
+ * @deprecated Use GenerateLetterButton from './ui/generate-letter-button' instead
+ * This component is kept for backward compatibility
+ */
 export function GenerateButton({
   loading = false,
   disabled = false,
@@ -17,35 +23,17 @@ export function GenerateButton({
   type = 'button',
   className = ''
 }: GenerateButtonProps) {
-  const buttonText = loading
-    ? 'Generating...'
-    : hasSubscription
-      ? 'Generate Letter'
-      : 'Subscribe to Generate';
-
   return (
-    <button
-      type={type}
-      className={`generate-letter-btn ${className}`}
+    <GenerateLetterButton
+      loading={loading}
+      disabled={disabled}
+      hasSubscription={hasSubscription}
       onClick={onClick}
-      disabled={loading || disabled}
-    >
-      <span className="btn-text">{buttonText}</span>
-      <span className="btn-icon">
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-        >
-          <path d="m9 18 6-6-6-6"/>
-        </svg>
-      </span>
-    </button>
+      type={type}
+      className={className}
+    />
   )
 }
+
+// Re-export the new component as the default
+export default GenerateLetterButton
