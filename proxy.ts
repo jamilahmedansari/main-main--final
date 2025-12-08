@@ -315,7 +315,7 @@ export async function proxy(request: NextRequest) {
     if (pathname === '/dashboard') {
       const url = new URL(request.url)
       if (userRole === 'admin') {
-        url.pathname = '/dashboard/admin'
+        url.pathname = `/${adminPortalRoute}/dashboard`
       } else if (userRole === 'employee') {
         url.pathname = '/dashboard/coupons'
       } else {
