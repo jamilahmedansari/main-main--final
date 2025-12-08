@@ -7,8 +7,8 @@
 
 	// Performance: Allocate more memory and CPU
 	"runArgs": [
-		"--memory=4g",
-		"--cpus=2"
+		"--memory=8g",
+		"--cpus=4"
 	],
 
 	// Performance: Exclude heavy directories from file watching

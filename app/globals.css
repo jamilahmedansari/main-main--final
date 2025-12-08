@@ -568,14 +568,15 @@ body {
   justify-content: center;
   width: 100%;
   max-width: 320px;
-  border-radius: 16px;
+  border-radius: 14px;
   line-height: 1.6;
   transition: all 0.3s ease;
   cursor: pointer;
-  background: transparent;
+  background: none;
   border: none;
   outline: none;
   padding: 0;
+  box-shadow: none;
 }
 
 .letter-card .content {
