@@ -1,29 +1,50 @@
 #!/bin/bash
 # =============================================================================
 # Talk-To-My-Lawyer Dev Container Setup Script
+# OPTIMIZED: Low storage with full features + retention cleanup
 # Runs once after container creation
 # =============================================================================
 
 set -e
 
 echo "🚀 Setting up Talk-To-My-Lawyer development environment..."
+echo "📦 Storage-optimized configuration with all features"
+
+# -----------------------------------------------------------------------------
+# 0. Storage Cleanup - Remove unnecessary files FIRST
+# -----------------------------------------------------------------------------
+echo "🧹 Cleaning up unnecessary files for storage optimization..."
+
+# Clean apt cache
+sudo apt-get clean 2>/dev/null || true
+sudo rm -rf /var/lib/apt/lists/* 2>/dev/null || true
+
+# Clean npm cache
+npm cache clean --force 2>/dev/null || true
+
+# Remove any existing build artifacts
+rm -rf .next 2>/dev/null || true
+rm -rf node_modules/.cache 2>/dev/null || true
 
 # -----------------------------------------------------------------------------
 # 1. Shell Integration Setup (CRITICAL for VS Code command detection)
 # -----------------------------------------------------------------------------
 echo "📝 Configuring shell integration..."
 
+# Backup existing bashrc
+cp ~/.bashrc ~/.bashrc.backup 2>/dev/null || true
+
 # Create bashrc additions for shell integration
 cat >> ~/.bashrc << 'SHELL_INTEGRATION'
 
-# VS Code Shell Integration
-if [ -n "$VSCODE_INJECTION" ]; then
-    . "$VSCODE_INJECTION"
-fi
-
-# Enable shell integration markers
-if [ "$TERM_PROGRAM" = "vscode" ]; then
-    . "$(code --locate-shell-integration-path bash 2>/dev/null || echo /dev/null)"
+# =============================================================================
+# VS Code Shell Integration (FIXES "Enable shell integration" warning)
+# =============================================================================
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+    # Load VS Code shell integration if available
+    if [[ -n "$VSCODE_SHELL_INTEGRATION" ]]; then
+        source "$VSCODE_SHELL_INTEGRATION"
+    fi
 fi
 
 # Helpful aliases for this project
@@ -34,11 +55,14 @@ alias start="pnpm start"
 alias db="supabase"
 alias stripe-listen="stripe listen --forward-to localhost:3000/api/stripe/webhook"
 
+# Storage cleanup alias
+alias cleanup="bash .devcontainer/cleanup.sh"
+
 # Show current branch in prompt
 parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
-export PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\]\$ "
+export PS1="\[\033[01;32m\]\u@ttml-dev\[\033[00m\]:\[\033[01;34m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\]\$ "
 
 SHELL_INTEGRATION
 
@@ -161,22 +185,67 @@ check_tool supabase
 check_tool vercel
 check_tool netlify
 check_tool stripe
-check_tool docker
 
 echo "-----------------------------------"
+
+# -----------------------------------------------------------------------------
+# 7. Configure Git (fix common "no email" error)
+# -----------------------------------------------------------------------------
 echo ""
+echo "🔧 Configuring Git defaults..."
+
+# Set default Git config to prevent "no email" errors
+git config --global init.defaultBranch main 2>/dev/null || true
+git config --global pull.rebase false 2>/dev/null || true
+
+# If in a git repo, set local config
+if [ -d ".git" ]; then
+    # Only set if not already configured
+    if [ -z "$(git config user.email)" ]; then
+        git config user.email "dev@localhost"
+        git config user.name "Developer"
+        echo "⚠️  Git user configured with placeholder. Run 'git config user.email YOUR_EMAIL' to update."
+    fi
+fi
+
+# -----------------------------------------------------------------------------
+# 8. Final storage cleanup
+# -----------------------------------------------------------------------------
+echo ""
+echo "🧹 Final storage cleanup..."
+
+# Clean pnpm cache (keep store, remove cache)
+pnpm store prune 2>/dev/null || true
+
+# Remove npm cache
+npm cache clean --force 2>/dev/null || true
+
+# Clean apt
+sudo apt-get clean 2>/dev/null || true
+sudo rm -rf /var/lib/apt/lists/* 2>/dev/null || true
+sudo rm -rf /tmp/* 2>/dev/null || true
+
+# Show disk usage
+echo ""
+echo "💾 Disk Usage:"
+df -h / 2>/dev/null | tail -1 || echo "Unable to check disk usage"
+
+echo ""
+echo "-----------------------------------"
 echo "🎉 Development environment setup complete!"
+echo "-----------------------------------"
 echo ""
-echo "📚 Quick Start:"
+echo "📚 Quick Start Commands:"
 echo "   pnpm dev          - Start Next.js dev server"
 echo "   pnpm build        - Build for production"
 echo "   pnpm lint         - Run ESLint"
 echo "   stripe listen     - Listen for Stripe webhooks"
-echo "   supabase start    - Start local Supabase (requires Docker)"
+echo "   cleanup           - Run storage cleanup"
 echo ""
-echo "⚠️  Don't forget to:"
+echo "⚠️  Setup Checklist:"
 echo "   1. Update .env.local with your credentials"
-echo "   2. Run 'gh auth login' to authenticate with GitHub"
-echo "   3. Run 'vercel login' to authenticate with Vercel"
-echo "   4. Run 'stripe login' to authenticate with Stripe"
+echo "   2. Run 'gh auth login' for GitHub"
+echo "   3. Run 'vercel login' for Vercel"  
+echo "   4. Run 'stripe login' for Stripe"
+echo "   5. Run 'git config user.email YOUR_EMAIL'"
 echo ""

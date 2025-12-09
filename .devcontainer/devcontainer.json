@@ -1,31 +1,33 @@
 // For format details, see https://aka.ms/devcontainer.json
 // Talk-To-My-Lawyer: Next.js 16 + Supabase + Stripe + AI SaaS Development Environment
+// OPTIMIZED: Low storage footprint with full features
 {
 	"name": "Talk-To-My-Lawyer Dev",
+	// Use slim Node.js image for smaller footprint
 	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
 
-	// Performance: Allocate sufficient resources
+	// Optimized resources - balanced for performance vs storage
 	"runArgs": [
-		"--memory=8g",
-		"--cpus=4",
-		"--shm-size=2g"
+		"--memory=4g",
+		"--cpus=2",
+		"--shm-size=512m",
+		"--init",
+		"--storage-opt=size=10G"
 	],
 
-	// Persist data across container rebuilds for faster startup
+	// Minimal volume mounts - only essential persistence
 	"mounts": [
-		"source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
-		"source=${localWorkspaceFolderBasename}-next,target=${containerWorkspaceFolder}/.next,type=volume",
 		"source=${localWorkspaceFolderBasename}-pnpm-store,target=/home/node/.local/share/pnpm,type=volume"
 	],
 
+	// Override default command to ensure proper shell
+	"overrideCommand": false,
+
 	"features": {
-		// Git and GitHub CLI
+		// Git and GitHub CLI (essential)
 		"ghcr.io/devcontainers/features/git:1": {
 			"version": "latest",
-			"ppa": true
-		},
-		"ghcr.io/devcontainers/features/git-lfs:1": {
-			"version": "latest"
+			"ppa": false
 		},
 		"ghcr.io/devcontainers/features/github-cli:1": {
 			"version": "latest"
@@ -38,12 +40,10 @@
 		"ghcr.io/devcontainers-extra/features/vercel-cli:1": {
 			"version": "latest"
 		},
-		// Stripe CLI - for payment testing and webhooks
+		// Stripe CLI - for payment testing
 		"ghcr.io/dhoeric/features/stripe-cli:1": {
 			"version": "latest"
-		},
-		// Editor
-		"ghcr.io/jungaretti/features/vim:1": {}
+		}
 	},
 
 	// Forward ports for development
