@@ -38,8 +38,8 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
     && apt-get install -y gh \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Supabase CLI (using npm - more reliable than deb)
-RUN npm install -g supabase@latest
+# Install Supabase CLI (using official install script)
+RUN curl -fsSL https://raw.githubusercontent.com/supabase/cli/main/install.sh | sh
 
 # Install Stripe CLI
 RUN curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | tee /usr/share/keyrings/stripe.gpg > /dev/null \
