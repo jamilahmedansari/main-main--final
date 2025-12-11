@@ -3,7 +3,7 @@
 # Optimized for Next.js 16 + Supabase + Stripe
 # =============================================================================
 
-FROM node:22-bookworm-slim
+FROM node:20-bookworm-slim
 
 # Avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
