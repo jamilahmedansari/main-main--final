@@ -1,4 +1,5 @@
 // For format details, see https://aka.ms/devcontainer.json
+
 // Talk-To-My-Lawyer: Next.js 16 + Supabase + Stripe + AI SaaS
 // Using custom Dockerfile for full control
 {
@@ -41,7 +42,9 @@
 	},
 
 	// Run after container creation
-	"postCreateCommand": "pnpm install && (cp -n .env.example .env.local 2>/dev/null || true) && (git config --global --add safe.directory /workspace || true)",
+	// NOTE: /workspace/node_modules is a named Docker volume that can be root-owned on first create.
+	// Ensure it is writable for the non-root `node` user before installing dependencies.
+	"postCreateCommand": "bash -lc \"set -e; if [ -d /workspace/node_modules ] && [ ! -w /workspace/node_modules ]; then sudo chown -R node:node /workspace/node_modules || true; fi; if [ -d /home/node/.local/share/pnpm ] && [ ! -w /home/node/.local/share/pnpm ]; then sudo chown -R node:node /home/node/.local/share/pnpm || true; fi; pnpm install --frozen-lockfile || pnpm install; (cp -n .env.example .env.local 2>/dev/null || true); (git config --global --add safe.directory /workspace || true)\"",
 
 	// Run on every start
 	"postStartCommand": "bash -lc \"echo '✅ Ready! Run: pnpm dev'; name=\\\"\\$(git config --get user.name 2>/dev/null)\\\"; email=\\\"\\$(git config --get user.email 2>/dev/null)\\\"; if [ -z \\\"$$name\\\" ] || [ -z \\\"$$email\\\" ]; then echo; echo '⚠️  Git identity not set inside container (commits may fail).'; echo 'Set it on your host (recommended):'; echo '  git config --global user.name \"Your Name\"'; echo '  git config --global user.email \"you@example.com\"'; echo; fi\"",
