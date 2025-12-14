@@ -12,6 +12,12 @@
 	// Run as the developer user created in Dockerfile
 	"remoteUser": "developer",
 
+	// Reuse host git identity inside the container (fixes: "Author identity unknown")
+	"mounts": [
+		"source=${localEnv:HOME}/.gitconfig,target=/home/developer/.gitconfig,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.config/git,target=/home/developer/.config/git,type=bind,consistency=cached"
+	],
+
 	// Forward ports for development
 	"forwardPorts": [3000, 54321, 54322, 4242],
 
@@ -35,10 +41,10 @@
 	},
 
 	// Run after container creation
-	"postCreateCommand": "pnpm install && cp -n .env.example .env.local 2>/dev/null || true",
+	"postCreateCommand": "pnpm install && (cp -n .env.example .env.local 2>/dev/null || true) && (git config --global --add safe.directory /workspace || true)",
 
 	// Run on every start
-	"postStartCommand": "echo '✅ Ready! Run: pnpm dev'",
+	"postStartCommand": "bash -lc \"echo '✅ Ready! Run: pnpm dev'; name=\\\"\\$(git config --get user.name 2>/dev/null)\\\"; email=\\\"\\$(git config --get user.email 2>/dev/null)\\\"; if [ -z \\\"$$name\\\" ] || [ -z \\\"$$email\\\" ]; then echo; echo '⚠️  Git identity not set inside container (commits may fail).'; echo 'Set it on your host (recommended):'; echo '  git config --global user.name \"Your Name\"'; echo '  git config --global user.email \"you@example.com\"'; echo; fi\"",
 
 	// VS Code customizations
 	"customizations": {
@@ -62,7 +68,7 @@
 				"terminal.integrated.defaultProfile.linux": "bash",
 				
 				// Editor
-				"editor.defaultFormatter": "esbenp.prettier-vscode",
+				"editor.defaultFormatter": null,
 				"editor.formatOnSave": true,
 				"editor.codeActionsOnSave": {
 					"source.fixAll.eslint": "explicit"
