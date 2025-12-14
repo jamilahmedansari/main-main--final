@@ -9,13 +9,13 @@
 	"service": "app",
 	"workspaceFolder": "/workspace",
 
-	// Run as the developer user created in Dockerfile
-	"remoteUser": "developer",
+	// Run as the built-in node user from the base image
+	"remoteUser": "node",
 
 	// Reuse host git identity inside the container (fixes: "Author identity unknown")
 	"mounts": [
-		"source=${localEnv:HOME}/.gitconfig,target=/home/developer/.gitconfig,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.config/git,target=/home/developer/.config/git,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.gitconfig,target=/home/node/.gitconfig,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.config/git,target=/home/node/.config/git,type=bind,consistency=cached"
 	],
 
 	// Forward ports for development

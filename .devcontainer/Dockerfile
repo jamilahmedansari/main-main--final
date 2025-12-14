@@ -72,31 +72,24 @@ RUN curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/publ
 RUN npm install -g npm@latest pnpm@latest vercel@latest netlify-cli@latest
 
 # -----------------------------
-# Create developer user (with stable UID/GID)
-# IMPORTANT: Make /workspace writable by developer
+# Use the built-in `node` user
+# IMPORTANT: Make /workspace writable by node
 # -----------------------------
-ARG USERNAME=developer
-ARG USER_UID=1000
-ARG USER_GID=1000
-
-RUN groupadd --gid ${USER_GID} ${USERNAME} \
-    && useradd -m -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} ${USERNAME} \
-    && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && groupadd -f docker \
-    && usermod -aG docker ${USERNAME} \
-    && mkdir -p /workspace \
-    && chown -R ${USERNAME}:${USERNAME} /workspace \
-    && mkdir -p /home/${USERNAME}/.local/share/pnpm \
-    && chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+RUN mkdir -p /workspace \
+  && chown -R node:node /workspace \
+  && mkdir -p /home/node/.local/share/pnpm \
+  && chown -R node:node /home/node/.local \
+  && echo "node ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/node \
+  && chmod 0440 /etc/sudoers.d/node
 
 # Environment
 ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PNPM_HOME=/home/developer/.local/share/pnpm
+ENV PNPM_HOME=/home/node/.local/share/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 
-# Switch to developer
-USER developer
+# Switch to node
+USER node
 WORKDIR /workspace
 
 # Nice prompt + aliases (optional but handy)
@@ -105,7 +98,7 @@ alias dev="pnpm dev"\n\
 alias build="pnpm build"\n\
 alias lint="pnpm lint"\n\
 alias start="pnpm start"\n\
-' >> /home/developer/.bashrc \
-    && touch /home/developer/.sudo_as_admin_successful
+' >> /home/node/.bashrc \
+  && touch /home/node/.sudo_as_admin_successful
 
 CMD ["bash"]

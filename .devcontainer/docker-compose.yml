@@ -8,16 +8,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ttml-dev
     volumes:
       # Mount the project directory
       - ..:/workspace:cached
       # Persist node_modules in a named volume for performance
       - node_modules:/workspace/node_modules
       # Persist pnpm store
-      - pnpm_store:/home/developer/.local/share/pnpm
+      - pnpm_store:/home/node/.local/share/pnpm
       # Persist bash history
-      - bash_history:/home/developer/.bash_history
+      - bash_history:/home/node/.bash_history
       # Docker-outside-of-Docker: Mount host Docker socket
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
