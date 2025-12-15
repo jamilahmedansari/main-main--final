@@ -1,15 +1,17 @@
-import { getUser } from '@/lib/auth/get-user'
+import { isAdminAuthenticated } from '@/lib/auth/admin-session'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { DashboardLayout } from '@/components/dashboard-layout'
 import { format } from 'date-fns'
 import { PayCommissionButton } from '@/components/pay-commission-button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { DollarSign, Users, Clock, CheckCircle } from 'lucide-react'
 
 export default async function AdminCommissionsPage() {
-  const { profile } = await getUser()
-  
-  if (profile.role !== 'admin') {
-    redirect('/dashboard')
+  // Verify admin session
+  const authenticated = await isAdminAuthenticated()
+  if (!authenticated) {
+    redirect('/secure-admin-gateway/login')
   }
 
   const supabase = await createClient()

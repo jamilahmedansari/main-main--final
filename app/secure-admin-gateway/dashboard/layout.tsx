@@ -1,7 +1,7 @@
 import { getAdminSession } from '@/lib/auth/admin-session'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { FileText, DollarSign, BarChart3, Shield, Gavel, LayoutDashboard, FileStack } from 'lucide-react'
+import { FileText, DollarSign, BarChart3, Shield, Gavel, LayoutDashboard, FileStack, Ticket, Users } from 'lucide-react'
 import { AdminLogoutButton } from '@/components/admin-logout-button'
 
 export default async function AdminDashboardLayout({
@@ -19,7 +19,8 @@ export default async function AdminDashboardLayout({
     {
       name: 'Dashboard',
       href: '/secure-admin-gateway/dashboard',
-      icon: LayoutDashboard
+      icon: LayoutDashboard,
+      description: 'Overview & summary'
     },
     {
       name: 'Review Center',
@@ -30,22 +31,38 @@ export default async function AdminDashboardLayout({
     {
       name: 'Review Queue',
       href: '/secure-admin-gateway/dashboard/letters',
-      icon: FileText
+      icon: FileText,
+      description: 'Pending letters'
     },
     {
       name: 'All Letters',
       href: '/secure-admin-gateway/dashboard/all-letters',
-      icon: FileStack
+      icon: FileStack,
+      description: 'All letter history'
+    },
+    {
+      name: 'Users',
+      href: '/secure-admin-gateway/dashboard/users',
+      icon: Users,
+      description: 'User management'
+    },
+    {
+      name: 'Coupons',
+      href: '/secure-admin-gateway/dashboard/coupons',
+      icon: Ticket,
+      description: 'Employee coupons'
     },
     {
       name: 'Commissions',
       href: '/secure-admin-gateway/dashboard/commissions',
-      icon: DollarSign
+      icon: DollarSign,
+      description: 'Employee payouts'
     },
     {
       name: 'Analytics',
       href: '/secure-admin-gateway/dashboard/analytics',
-      icon: BarChart3
+      icon: BarChart3,
+      description: 'Comprehensive reports'
     }
   ]
 
