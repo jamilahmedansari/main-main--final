@@ -63,12 +63,16 @@ export async function GET(request: NextRequest) {
     // Build commission totals by employee
     const commissionsByEmployee: Record<string, { total: number; paid: number }> = {}
     commissions?.forEach(c => {
+      if (!c.employee_id) return
       if (!commissionsByEmployee[c.employee_id]) {
         commissionsByEmployee[c.employee_id] = { total: 0, paid: 0 }
       }
-      commissionsByEmployee[c.employee_id].total += Number(c.commission_amount || 0)
-      if (c.status === 'paid') {
-        commissionsByEmployee[c.employee_id].paid += Number(c.commission_amount || 0)
+      const entry = commissionsByEmployee[c.employee_id]
+      if (entry) {
+        entry.total += Number(c.commission_amount || 0)
+        if (c.status === 'paid') {
+          entry.paid += Number(c.commission_amount || 0)
+        }
       }
     })
 
@@ -79,7 +83,10 @@ export async function GET(request: NextRequest) {
         if (!discountsByEmployee[s.employee_id]) {
           discountsByEmployee[s.employee_id] = 0
         }
-        discountsByEmployee[s.employee_id] += Number(s.discount || 0)
+        const current = discountsByEmployee[s.employee_id]
+        if (current !== undefined) {
+          discountsByEmployee[s.employee_id] = current + Number(s.discount || 0)
+        }
       }
     })
 
