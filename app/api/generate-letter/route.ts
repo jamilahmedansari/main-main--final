@@ -32,29 +32,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Only subscribers can generate letters" }, { status: 403 })
     }
 
-    // 3. Subscription & Limit Check - Use database function for atomic check
-    // This prevents race conditions by using a single atomic database call
-    const { data: allowance, error: allowanceError } = await supabase.rpc("check_letter_allowance", {
-      u_id: user.id,
-    })
+    // 3. Check Free Trial eligibility using total_letters_generated
+    // This fixes the abuse where users could delete letters and regenerate
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("total_letters_generated")
+      .eq("id", user.id)
+      .single()
 
-    if (allowanceError) {
-      console.error("[GenerateLetter] Error checking allowance:", allowanceError)
-      return NextResponse.json({ error: "Failed to check letter allowance" }, { status: 500 })
-    }
+    const totalGenerated = profileData?.total_letters_generated || 0
+    const { data: allowance } = await supabase.rpc("check_letter_allowance", { u_id: user.id })
+    const isSuperUser = allowance?.is_super || false
 
-    // Check if this is their first letter ever (free trial) - must be 0 total letters
-    const { count: totalLetterCount } = await supabase
-      .from("letters")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .not("status", "eq", "failed") // Don't count failed attempts
+    // Free trial = 0 total generated letters AND no active paid allowance (implied)
+    // Actually, if they have allowance, they are not on free trial logic, they use allowance.
+    // If they have NO allowance, and 0 generated, they get free trial.
+    const hasAllowance = allowance?.has_allowance && (allowance?.remaining || 0) > 0
+    
+    const isFreeTrial = totalGenerated === 0 && !hasAllowance && !isSuperUser
 
-    const isFreeTrial = (totalLetterCount || 0) === 0 && !allowance?.is_super
-
-    // If not free trial and not super user, check credits
-    if (!isFreeTrial && !allowance?.is_super) {
-      if (!allowance?.has_allowance || (allowance?.remaining || 0) <= 0) {
+    if (!isFreeTrial && !hasAllowance && !isSuperUser) {
         return NextResponse.json(
           {
             error: "No letter credits remaining. Please upgrade your plan.",
@@ -62,7 +59,6 @@ export async function POST(request: NextRequest) {
           },
           { status: 403 },
         )
-      }
     }
 
     const body = await request.json()
@@ -75,6 +71,24 @@ export async function POST(request: NextRequest) {
     if (!process.env.OPENAI_API_KEY) {
       console.error("[GenerateLetter] Missing OPENAI_API_KEY")
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
+    }
+
+    // CRITICAL FIX: Deduct allowance BEFORE generation to prevent race condition
+    // Skip deduction for free trial or super user
+    if (!isFreeTrial && !isSuperUser) {
+        const { data: canDeduct, error: deductError } = await supabase.rpc("deduct_letter_allowance", {
+          u_id: user.id,
+        })
+
+        if (deductError || !canDeduct) {
+          return NextResponse.json(
+            {
+              error: "No letter allowances remaining (or race condition prevented overage).",
+              needsSubscription: true,
+            },
+            { status: 403 },
+          )
+        }
     }
 
     // 4. Create letter record with 'generating' status
@@ -94,6 +108,10 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error("[GenerateLetter] Database insert error:", insertError)
+      // Refund if we deducted
+      if (!isFreeTrial && !isSuperUser) {
+         await supabase.rpc("add_letter_allowances", { u_id: user.id, amount: 1 })
+      }
       return NextResponse.json({ error: "Failed to create letter record" }, { status: 500 })
     }
 
@@ -110,7 +128,6 @@ export async function POST(request: NextRequest) {
       })
 
       if (!generatedContent) {
-        console.error("[GenerateLetter] AI returned empty content")
         throw new Error("AI returned empty content")
       }
 
@@ -125,32 +142,11 @@ export async function POST(request: NextRequest) {
         .eq("id", newLetter.id)
 
       if (updateError) {
-        console.error("[GenerateLetter] Failed to update letter with content:", updateError)
-        throw updateError
+        throw updateError // Will be caught below
       }
 
-      // 7. Deduct allowance once we've successfully generated the letter (skip for free trial)
-      if (!isFreeTrial) {
-        const { data: canDeduct, error: deductError } = await supabase.rpc("deduct_letter_allowance", {
-          user_uuid: user.id,
-        })
-
-        if (deductError || !canDeduct) {
-          // Mark as failed instead of deleting
-          await supabase
-            .from("letters")
-            .update({ status: "failed", updated_at: new Date().toISOString() })
-            .eq("id", newLetter.id)
-          
-          return NextResponse.json(
-            {
-              error: "No letter allowances remaining. Please upgrade your plan.",
-              needsSubscription: true,
-            },
-            { status: 403 },
-          )
-        }
-      }
+      // 7. Increment total_letters_generated (Fix for abuse)
+      await supabase.rpc('increment_total_letters', { p_user_id: user.id })
 
       // 8. Log audit trail for letter creation
       await supabase.rpc('log_letter_audit', {
@@ -183,6 +179,12 @@ export async function POST(request: NextRequest) {
         })
         .eq("id", newLetter.id)
       
+      // REFUND if we deducted
+      if (!isFreeTrial && !isSuperUser) {
+         await supabase.rpc("add_letter_allowances", { u_id: user.id, amount: 1 })
+         // Also log refund? add_letter_allowances already logs checks.
+      }
+
       // Log audit trail for failure
       await supabase.rpc('log_letter_audit', {
         p_letter_id: newLetter.id,
