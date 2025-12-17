@@ -1,11 +1,13 @@
 # Code-Documentation Alignment Report
 
 ## Summary
+
 This report documents all discrepancies between the documented behavior and the actual code implementation in the Talk-To-My-Lawyer codebase.
 
 ---
 
 ## MISMATCH #1:
+
 - **Document**: CLAUDE.md
 - **Section**: Package Manager (line 40)
 - **Documented Behavior**: "Package Manager: npm"
@@ -17,6 +19,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #2:
+
 - **Document**: DATABASE_FUNCTIONS.md
 - **Section**: Letter Status Flow (lines 11-22)
 - **Documented Behavior**: Status flow includes `approved` as a legacy status
@@ -28,6 +31,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #3:
+
 - **Document**: DATABASE_FUNCTIONS.md
 - **Section`: Function `log_letter_audit` (lines 75-77)
 - **Documented Behavior**: Called by `/api/letters/[id]/start-review`, `/api/letters/[id]/approve`, `/api/letters/[id]/reject`
@@ -39,6 +43,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #4:
+
 - **Document**: DATABASE_FUNCTIONS.md
 - **Section**: Function `add_letter_allowances` (documented but not implemented)
 - **Documented Behavior**: Function exists to add letter credits
@@ -50,6 +55,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #5:
+
 - **Document**: DATABASE_FUNCTIONS.md
 - **Section**: Function `validate_coupon` (documented)
 - **Documented Behavior**: Function exists to validate employee coupons
@@ -61,6 +67,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #6:
+
 - **Document**: CLAUDE.md
 - **Section`: Project Structure (lines 61-65)
 - **Documented Behavior**: Admin pages at `/dashboard/admin/`
@@ -72,6 +79,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #7:
+
 - **Document**: DATABASE_FUNCTIONS.md
 - **Section**: Function `reset_monthly_allowances`
 - **Documented Behavior**: Returns VOID
@@ -83,6 +91,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #8:
+
 - **Document**: Multiple locations
 - **Section**: Environment variables
 - **Documented Behavior**: `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` is the correct name
@@ -94,6 +103,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #9:
+
 - **Document**: .env.example
 - **Section**: Environment variables
 - **Documented Behavior**: Lists `RESEND_API_KEY` for email functionality
@@ -105,6 +115,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #10:
+
 - **Document**: DATABASE_FUNCTIONS.md
 - **Section`: coupon_usage table (referenced multiple times)
 - **Documented Behavior**: Table exists for tracking coupon usage
@@ -116,6 +127,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #11:
+
 - **Document**: CLAUDE.md
 - **Section**: Security Best Practices
 - **Documented Behavior**: "Rate limiting: Letter generation: 5 per 15 minutes"
@@ -127,6 +139,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #12:
+
 - **Document**: DATABASE_FUNCTIONS.md
 - **Section**: Audit logging
 - **Documented Behavior**: All letter status changes should be logged
@@ -138,6 +151,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #13:
+
 - **Document**: DATABASE_FUNCTIONS.md
 - **Section**: Security hardening
 - **Documented Behavior**: Search path changes implemented for security
@@ -149,6 +163,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #14:
+
 - **Document**: DATABASE_FUNCTIONS.md
 - **Section**: `get_employee_coupon` function (documented)
 - **Documented Behavior**: Function exists to get employee coupon info
@@ -160,6 +175,7 @@ This report documents all discrepancies between the documented behavior and the 
 ---
 
 ## MISMATCH #15:
+
 - **Document**: PRODUCTION_CHECKLIST.md
 - **Section**: Environment variables
 - **Documented Behavior**: `CRON_SECRET` required for monthly reset
@@ -173,17 +189,20 @@ This report documents all discrepancies between the documented behavior and the 
 ## Priority Fixes Required:
 
 ### Critical (Must Fix Before Production):
+
 1. **MISMATCH #10** - Create coupon_usage table
 2. **MISMATCH #3** - Create `/api/letters/[id]/start-review` endpoint
 3. **MISMATCH #11** - Implement rate limiting
 4. **MISMATCH #6** - Update admin portal documentation
 
 ### High Priority:
+
 5. **MISMATCH #4** - Add `add_letter_allowances` function
 6. **MISMATCH #5** - Add `validate_coupon` function
 7. **MISMATCH #12** - Complete audit logging implementation
 
 ### Medium Priority:
+
 8. **MISMATCH #1** - Update package manager documentation
 9. **MISMATCH #2** - Standardize status usage (approved vs completed)
 10. **MISMATCH #9** - Implement email or remove RESEND_API_KEY
