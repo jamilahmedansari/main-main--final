@@ -55,7 +55,7 @@ pnpm lint                   # ESLint check
 
 ## Environment Variables (Do Not Paste Secrets)
 
-Use [.env.example](.env.example) as the source of truth. Put real values only in local/hosting env (e.g. `.env.local`, Vercel env vars) and never commit or paste secret values into repo docs.
+Use [.env.example](../.env.example) as the source of truth. Put real values only in local/hosting env (e.g. `.env.local`, Vercel env vars) and never commit or paste secret values into repo docs.
 
 Required / common runtime vars (names only):
 - `NEXT_PUBLIC_APP_URL`

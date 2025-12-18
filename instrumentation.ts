@@ -19,13 +19,13 @@ export async function register() {
     console.log('[Instrumentation] Graceful shutdown handler registered')
 
     // Register cleanup handlers for resources
-    shutdownManager.registerHandler('database', async () => {
+    shutdownManager.register('database', async () => {
       console.log('[Shutdown] Closing database connections...')
       // Supabase client handles connection pooling automatically
       // No explicit cleanup needed for Supabase
     })
 
-    shutdownManager.registerHandler('redis', async () => {
+    shutdownManager.register('redis', async () => {
       console.log('[Shutdown] Closing Redis connections...')
       // Redis connections are handled by ioredis
       // They will be closed automatically by the graceful shutdown timeout
