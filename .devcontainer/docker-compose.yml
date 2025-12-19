@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile.dev
+    volumes:
+      - ..:/workspace:cached
+      - node_modules:/workspace/node_modules
+      - pnpm_store:/home/node/.local/share/pnpm/store
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - ENABLE_TEST_MODE=true
+      - NEXT_PUBLIC_TEST_MODE=true
+    # Uncomment below if you have .env.local configured
+    # env_file:
+    #   - ../.env.local
+    command: sleep infinity
+    networks:
+      - ttml-dev
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ttml-dev
+
+volumes:
+  node_modules:
+  pnpm_store:
+  redis_data:
+
+networks:
+  ttml-dev:
+    driver: bridge
