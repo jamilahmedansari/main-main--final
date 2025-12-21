@@ -1,0 +1,256 @@
+# Cursor IDE Rules for Talk-To-My-Lawyer
+
+> **IMPORTANT**: See `/workspace/AI_AGENTS_GUIDE.md` for complete feature list, all 77 routes, and comprehensive patterns.
+
+## Quick Context
+
+**Talk-To-My-Lawyer**: AI-powered legal letter SaaS with mandatory attorney review.
+
+User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → PDF Download
+
+### Tech Stack
+- Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, shadcn/ui
+- Supabase (PostgreSQL + RLS + Auth), Stripe, OpenAI via Vercel AI SDK
+- pnpm package manager
+
+---
+
+## ⚠️ CRITICAL RULES
+
+### #1: Extension, Not Reconstruction
+This app is **95% complete** with **100+ features** and **77 routes**.
+
+✅ DO: Add features, fix bugs, improve existing code
+❌ DON'T: Rebuild architecture, replace working systems, redesign database
+
+### #2: Role Authorization
+
+| Role | DB Value | Access | Critical Constraint |
+|------|----------|--------|---------------------|
+| Subscriber | `role='subscriber'` | Own letters, subscription | First letter free |
+| Employee | `role='employee'` | Own coupons, commissions | **NEVER see letter content** |
+| Admin | `role='admin'` | Full system access | **Only ONE admin** |
+
+**CRITICAL: `is_super_user` is NOT admin!**
+```typescript
+// ❌ WRONG
+if (profile.is_super_user) { /* admin logic */ }
+
+// ✅ CORRECT - is_super_user = unlimited letters ONLY
+if (profile.is_super_user) { /* skip credit check */ }
+
+// ✅ CORRECT - admin check
+if (profile.role === 'admin') { /* admin logic */ }
+```
+
+### #3: Letter Status Workflow
+```
+draft → generating → pending_review → under_review → approved → completed
+                                                   ↘ rejected
+```
+
+**Rules:**
+- Unapproved letters: Content HIDDEN from subscriber
+- All transitions: MUST log via `log_letter_audit()`
+- Employee isolation: Employees NEVER see letter content (RLS enforced)
+
+### #4: Supabase Client Usage
+```typescript
+// Server (API routes, server components)
+import { createClient } from "@/lib/supabase/server"
+const supabase = await createClient()
+
+// Client (React components)
+import { createClient } from "@/lib/supabase/client"
+const supabase = createClient()
+```
+
+### #5: Admin Authentication (Two-Layer)
+Admin portal is SEPARATE from Supabase Auth:
+- Login: `/secure-admin-gateway/login`
+- Requires: email + password + portal key (all from ENV)
+- Separate cookie-based session (30min timeout)
+- Middleware protects all `/secure-admin-gateway/*` routes
+
+```typescript
+import { isAdminAuthenticated } from "@/lib/auth/admin-session"
+
+const isAdmin = await isAdminAuthenticated()
+if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+```
+
+---
+
+## Standard Patterns
+
+### API Route Pattern
+```typescript
+import { createClient } from "@/lib/supabase/server"
+import { NextRequest, NextResponse } from "next/server"
+
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createClient()
+
+    // 1. Auth check
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    // 2. Role check (if needed)
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+
+    // 3. Business logic (RLS auto-enforces access)
+    // ...
+
+    // 4. Response
+    return NextResponse.json({ success: true, data: result })
+  } catch (error: any) {
+    console.error("[API] Error:", error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
+```
+
+### AI Generation Pattern (OpenAI via Vercel AI SDK)
+```typescript
+import { openai } from "@ai-sdk/openai"
+import { generateText } from "ai"
+
+// Validate API key
+if (!process.env.OPENAI_API_KEY) {
+  return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
+}
+
+// Generate content
+const { text: generatedContent } = await generateText({
+  model: openai("gpt-4-turbo"),
+  system: "You are a professional legal attorney drafting formal legal letters...",
+  prompt: buildPrompt(letterType, intakeData),
+  temperature: 0.7,
+  maxTokens: 2048,
+})
+
+// Always validate and handle errors
+if (!generatedContent) throw new Error("AI returned empty content")
+```
+
+### Database Query Pattern
+```typescript
+// ✅ Use RPC functions for business logic
+const { data: allowance } = await supabase.rpc('check_letter_allowance', {
+  u_id: userId
+})
+
+// ✅ RLS auto-filters by user
+const { data: letters } = await supabase
+  .from("letters")
+  .select("*")
+  .eq("user_id", userId)
+
+// ✅ Always audit status changes
+await supabase.rpc('log_letter_audit', {
+  p_letter_id: letterId,
+  p_action: 'approved',
+  p_old_status: 'under_review',
+  p_new_status: 'approved',
+  p_notes: 'Approved by admin'
+})
+```
+
+---
+
+## Key Database Functions
+
+| Function | Purpose |
+|----------|---------|
+| `check_letter_allowance(u_id)` | Returns `{has_allowance, remaining, plan_name, is_super}` |
+| `deduct_letter_allowance(u_id)` | Deducts 1 credit, returns boolean |
+| `log_letter_audit(...)` | Creates audit trail entry |
+| `validate_coupon(code)` | Validates employee coupon |
+| `get_user_role(u_id)` | Gets user's role |
+
+---
+
+## Project Structure (Key Paths)
+
+```
+app/api/generate-letter/     # AI letter generation
+app/api/letters/[id]/        # Letter actions (approve, reject, improve, pdf, send-email)
+app/dashboard/               # Subscriber/Employee dashboard
+app/secure-admin-gateway/    # Admin portal (separate auth)
+lib/auth/admin-session.ts    # Admin session management
+lib/supabase/server.ts       # Server Supabase client
+supabase/migrations/         # Database migrations
+```
+
+---
+
+## Security Checklist
+
+1. **RLS mandatory** - Never bypass with service role in user-facing code
+2. **Employee isolation** - Employees NEVER see letter content
+3. **Audit logging** - All letter status changes must be logged
+4. **Admin auth** - Use separate portal session + role check
+5. **Secrets** - Never log API keys, use `process.env` only
+6. **Input validation** - Validate all user input
+7. **Search path** - All SECURITY DEFINER functions must SET search_path
+
+---
+
+## Common Gotchas
+
+- **Free trial**: Check `count === 0` letters before requiring subscription
+- **Letter credits**: Call `deduct_letter_allowance(u_id)` after generation (if not free trial)
+- **Admin routes**: Use `isAdminAuthenticated()` from `lib/auth/admin-session.ts`
+- **UI components**: Use `@/components/ui/*` (shadcn/ui), toast via `sonner`
+- **TypeScript**: Use types from `lib/database.types.ts`, avoid `any`
+
+---
+
+## Commands
+
+```bash
+pnpm install    # Install dependencies
+pnpm dev        # Development server (localhost:3000)
+pnpm build      # Production build (must pass)
+pnpm lint       # ESLint check
+```
+
+---
+
+## Environment Variables (Required)
+
+See `.env.example` for full list. Never commit secrets.
+
+Key variables:
+- `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only)
+- `OPENAI_API_KEY` (for Vercel AI SDK)
+- `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET`
+- `ADMIN_EMAIL` / `ADMIN_PASSWORD` / `ADMIN_PORTAL_KEY`
+
+---
+
+## Application Stats
+
+- **Total Features**: 100+ completed features
+- **Total Routes**: 77 routes (40 API endpoints + 37 page routes)
+- **Database Tables**: 11+ tables with full RLS
+- **UI Components**: 50+ components (shadcn/ui + custom)
+- **Status**: Production ready
+
+---
+
+## Reference Documentation
+
+For complete feature list, all routes, and detailed patterns:
+📖 **See `/workspace/AI_AGENTS_GUIDE.md`**
+
+Additional resources:
+- `/workspace/CLAUDE.md` - Quick reference
+- `/workspace/.github/copilot-instructions.md` - GitHub Copilot guide
+- `/workspace/.copilot-codeGeneration-instructions.md` - Detailed code generation guide

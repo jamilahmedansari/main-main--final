@@ -1,9 +1,14 @@
 # CLAUDE.md - AI Assistant Development Guide
 
-> Quick reference for AI assistants. For full documentation, see consolidated docs in project root.
+> **📖 For complete feature list, all 77 routes, and comprehensive documentation:**
+> **See `/workspace/AI_AGENTS_GUIDE.md`**
+>
+> This file is a quick reference. For detailed patterns, see AI_AGENTS_GUIDE.md.
 
 ## Project Summary
 **Talk-To-My-Lawyer**: AI-powered legal letter SaaS with mandatory attorney review.
+
+**Status**: Production ready with 100+ features, 77 routes (40 API + 37 pages)
 
 ```
 User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → PDF Download

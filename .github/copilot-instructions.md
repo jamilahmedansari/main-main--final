@@ -1,8 +1,18 @@
 # Project Context
+
+> **📖 For complete feature list, all 77 routes, and comprehensive patterns:**
+> **See `/workspace/AI_AGENTS_GUIDE.md`**
+
 User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → Approved PDF
 
 ## Tech Stack
 Next.js 16 (App Router, React 19) | Supabase (Postgres + RLS) | OpenAI via Vercel AI SDK | Stripe | pnpm
+
+## Application Overview
+- **Total Features**: 100+ completed features (User, Employee, Admin)
+- **Total Routes**: 77 routes (40 API endpoints + 37 page routes)
+- **Database**: 11+ tables with full RLS policies
+- **Status**: Production ready
 
 ## Role Authorization (Critical)
 
