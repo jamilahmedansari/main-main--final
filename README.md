@@ -9,6 +9,7 @@ A production-ready SaaS platform that generates professional legal letters with 
 ## 🎯 Overview
 
 Talk-To-My-Lawyer is a three-tier platform designed for:
+
 - **Subscribers**: Generate professional legal letters with AI assistance
 - **Employees**: Earn commissions through referral coupons
 - **Admins**: Review, edit, and approve all letters before delivery
@@ -24,6 +25,7 @@ Subscriber → AI Draft Generation → Admin Review & Editing → Approval → S
 ## 🏗️ Tech Stack
 
 ### Frontend
+
 - **Framework**: Next.js 15 with App Router (React 19)
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4.1+ with custom design system
@@ -32,6 +34,7 @@ Subscriber → AI Draft Generation → Admin Review & Editing → Approval → S
 - **Animations**: Motion (Framer Motion)
 
 ### Backend
+
 - **Database**: PostgreSQL via Supabase
 - **Authentication**: Supabase Auth with role-based access control
 - **API**: Next.js API Routes (App Router)
@@ -40,6 +43,7 @@ Subscriber → AI Draft Generation → Admin Review & Editing → Approval → S
 - **Payments**: Stripe (checkout + webhooks)
 
 ### Infrastructure
+
 - **Hosting**: Vercel
 - **Database**: Supabase (PostgreSQL with RLS)
 - **Package Manager**: pnpm
@@ -104,6 +108,7 @@ Visit `http://localhost:3000` to see the application.
 ## 🔐 User Roles & Access
 
 ### Subscriber
+
 - Generate legal letters (AI-powered)
 - View letter status and history
 - Download approved letters as PDF
@@ -111,6 +116,7 @@ Visit `http://localhost:3000` to see the application.
 - **Access**: `/dashboard/letters`, `/dashboard/subscription`
 
 ### Employee
+
 - View personal referral coupon codes
 - Track commission earnings (5% of subscription amount)
 - Monitor coupon usage statistics
@@ -119,6 +125,7 @@ Visit `http://localhost:3000` to see the application.
 - **Access**: `/dashboard/coupons`, `/dashboard/commissions`
 
 ### Admin (Single Licensed Attorney)
+
 - **There is exactly ONE admin** who is the licensed attorney
 - Review all pending letters in the Review Center
 - Edit letters manually or improve with AI assistance
@@ -132,21 +139,25 @@ Visit `http://localhost:3000` to see the application.
 ## 📝 Letter Workflow
 
 ### 1. Generation (Subscriber)
+
 ```
 Subscriber creates letter → AI generates draft → Status: "pending_review"
 ```
 
 ### 2. Review (Admin)
+
 ```
 Admin opens letter → Reviews/edits content → Can use AI to improve → Approves or Rejects
 ```
 
 ### 3. Delivery (Subscriber)
+
 ```
 Letter approved → Visible in subscriber dashboard → Can download PDF or send via email
 ```
 
 ### Letter Statuses
+
 - `draft` - Initial state, not submitted
 - `generating` - AI is creating the letter
 - `pending_review` - Waiting for admin review
@@ -172,6 +183,7 @@ Letter approved → Visible in subscriber dashboard → Can download PDF or send
 ### Row Level Security (RLS)
 
 All tables have RLS policies enforced:
+
 - Subscribers can only access their own data
 - Employees cannot access letter content (business requirement)
 - Admins have full access to all data
@@ -233,6 +245,7 @@ supabase db reset     # Reset database
 See `.env.example` for all required environment variables.
 
 **Required for development:**
+
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
@@ -240,6 +253,7 @@ See `.env.example` for all required environment variables.
 - `ADMIN_EMAIL` / `ADMIN_PASSWORD` / `ADMIN_PORTAL_KEY`
 
 **Optional:**
+
 - Stripe keys (for payment testing)
 - Redis/Upstash (for rate limiting)
 
@@ -271,6 +285,7 @@ STRIPE_SECRET_KEY=sk_live_...
 ## 🧩 Key Features
 
 ### For Subscribers
+
 - ✅ Free first letter (no credit card required)
 - ✅ AI-powered letter generation (OpenAI GPT-4 Turbo)
 - ✅ Professional attorney review and editing
@@ -279,6 +294,7 @@ STRIPE_SECRET_KEY=sk_live_...
 - ✅ Complete letter history and status tracking
 
 ### For Employees
+
 - ✅ Automatic coupon code generation
 - ✅ 20% discount for referred subscribers
 - ✅ 5% commission on successful subscriptions
@@ -286,6 +302,7 @@ STRIPE_SECRET_KEY=sk_live_...
 - ✅ Usage statistics and analytics
 
 ### For Admins
+
 - ✅ Dedicated admin portal (`/secure-admin-gateway`)
 - ✅ Review queue with FIFO ordering
 - ✅ AI-powered letter improvement tool
@@ -344,6 +361,7 @@ This is a production application. For development:
 ## 📞 Support
 
 For questions or issues:
+
 - Check documentation in `CLAUDE.md` and `PLATFORM_ARCHITECTURE.md`
 - Review the appropriate specialized guide
 - Consult database function reference in `DATABASE_FUNCTIONS.md`
@@ -361,6 +379,7 @@ See [LICENSE](./LICENSE) file for details.
 **Current Status**: Production-ready MVP
 
 **Completed**:
+
 - ✅ Three-tier user system (subscriber/employee/admin)
 - ✅ AI letter generation (OpenAI GPT-4 Turbo)
 - ✅ Admin review and approval workflow
@@ -373,6 +392,7 @@ See [LICENSE](./LICENSE) file for details.
 - ✅ Email delivery
 
 **Next Phase**:
+
 - Advanced analytics dashboard
 - Real-time notifications
 - Letter templates library

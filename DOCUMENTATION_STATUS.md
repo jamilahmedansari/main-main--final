@@ -10,6 +10,7 @@
 ### 1. Unified AI Integration Documentation
 
 **Problem**: Conflicting documentation about AI integration
+
 - Some docs mentioned Gemini
 - Some mentioned OpenAI via Supabase Edge Functions
 - Code actually uses OpenAI via Vercel AI SDK
@@ -19,9 +20,11 @@
 ### 2. Files Updated
 
 #### ✅ `.copilot-codeGeneration-instructions.md` (PRIMARY - 1055 lines)
+
 **Purpose**: Instructions for AI coding assistants (Copilot, Claude, etc.)
 
 **Key Updates**:
+
 - ✅ Documented current OpenAI + Vercel AI SDK architecture
 - ✅ Removed Supabase Edge Functions requirement
 - ✅ Added comprehensive AI integration patterns
@@ -32,17 +35,21 @@
 - ✅ Fixed markdown linting issues
 
 #### ✅ `GEMINI_INTEGRATION.md` (DEPRECATED)
+
 **Status**: Marked as deprecated with warning notice
 
 **Changes**:
+
 - ⚠️ Added deprecation notice at top
 - ⚠️ Redirects to CLAUDE.md for current implementation
 - 📝 Kept for historical reference only
 
 #### ✅ `CLAUDE.md` (CURRENT - Unchanged, already correct)
+
 **Status**: Already documented correct implementation
 
 **Contains**:
+
 - ✅ OpenAI GPT-4 Turbo via Vercel AI SDK
 - ✅ Correct architecture patterns
 - ✅ Complete development workflows
@@ -50,6 +57,7 @@
 ### 3. Environment Configuration
 
 #### ✅ `.env.example` - Already Correct
+
 ```bash
 OPENAI_API_KEY=           # ✅ Correct (not GEMINI_API_KEY)
 ```
@@ -68,6 +76,7 @@ OPENAI_API_KEY=           # ✅ Correct (not GEMINI_API_KEY)
 ```
 
 **Key Points**:
+
 - ✅ Uses `@ai-sdk/openai` and `ai` npm packages
 - ✅ Direct integration in Next.js API routes
 - ✅ Server-side only (OPENAI_API_KEY never exposed to client)
@@ -82,16 +91,16 @@ OPENAI_API_KEY=           # ✅ Correct (not GEMINI_API_KEY)
 ### Pattern
 
 ```typescript
-import { openai } from "@ai-sdk/openai"
-import { generateText } from "ai"
+import { openai } from "@ai-sdk/openai";
+import { generateText } from "ai";
 
 const { text } = await generateText({
   model: openai("gpt-4-turbo"),
   system: "You are a professional legal attorney...",
   prompt: "Draft a letter...",
   temperature: 0.7,
-  maxTokens: 2048
-})
+  maxTokens: 2048,
+});
 ```
 
 ---
@@ -101,12 +110,14 @@ const { text } = await generateText({
 ### For Development (Read in this order)
 
 1. **`.copilot-codeGeneration-instructions.md`** - AI assistant guide
+
    - Complete architecture overview
    - Coding patterns and conventions
    - AI integration guide
    - Security best practices
 
 2. **`CLAUDE.md`** - Human developer guide
+
    - Project overview
    - Development workflows
    - Database schema
@@ -146,6 +157,7 @@ nano .env.local
 ```
 
 **Required Variables**:
+
 ```bash
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=your-project-url.supabase.co
@@ -203,23 +215,23 @@ App will be available at: `http://localhost:3000`
 
 ### Before ❌
 
-| Document | AI Provider | Architecture |
-|----------|-------------|--------------|
+| Document                                | AI Provider                        | Architecture            |
+| --------------------------------------- | ---------------------------------- | ----------------------- |
 | .copilot-codeGeneration-instructions.md | Gemini → OpenAI via Edge Functions | Supabase Edge Functions |
-| CLAUDE.md | OpenAI via Vercel AI SDK | Next.js API Routes |
-| GEMINI_INTEGRATION.md | Google Gemini | Direct fetch |
-| Actual Code | OpenAI via Vercel AI SDK | Next.js API Routes |
+| CLAUDE.md                               | OpenAI via Vercel AI SDK           | Next.js API Routes      |
+| GEMINI_INTEGRATION.md                   | Google Gemini                      | Direct fetch            |
+| Actual Code                             | OpenAI via Vercel AI SDK           | Next.js API Routes      |
 
 **Result**: Confusing, contradictory guidance
 
 ### After ✅
 
-| Document | AI Provider | Architecture | Status |
-|----------|-------------|--------------|--------|
-| .copilot-codeGeneration-instructions.md | OpenAI via Vercel AI SDK | Next.js API Routes | ✅ Updated |
-| CLAUDE.md | OpenAI via Vercel AI SDK | Next.js API Routes | ✅ Correct |
-| GEMINI_INTEGRATION.md | N/A | N/A | ⚠️ Deprecated |
-| Actual Code | OpenAI via Vercel AI SDK | Next.js API Routes | ✅ Matches Docs |
+| Document                                | AI Provider              | Architecture       | Status          |
+| --------------------------------------- | ------------------------ | ------------------ | --------------- |
+| .copilot-codeGeneration-instructions.md | OpenAI via Vercel AI SDK | Next.js API Routes | ✅ Updated      |
+| CLAUDE.md                               | OpenAI via Vercel AI SDK | Next.js API Routes | ✅ Correct      |
+| GEMINI_INTEGRATION.md                   | N/A                      | N/A                | ⚠️ Deprecated   |
+| Actual Code                             | OpenAI via Vercel AI SDK | Next.js API Routes | ✅ Matches Docs |
 
 **Result**: Unified, consistent guidance
 
@@ -232,6 +244,7 @@ App will be available at: `http://localhost:3000`
 **Decision**: Use Next.js API routes with Vercel AI SDK
 
 **Rationale**:
+
 - Simpler architecture (single codebase)
 - Better DX and debugging
 - Type-safe end-to-end
@@ -243,6 +256,7 @@ App will be available at: `http://localhost:3000`
 **Decision**: Exactly one admin user who IS the licensed attorney, no multi-admin support
 
 **Implementation**:
+
 - Admin role stored in `profiles.role = 'admin'`
 - Admin IS the licensed attorney who reviews ALL letters
 - Admin access via `/secure-admin-gateway` portal
@@ -254,6 +268,7 @@ App will be available at: `http://localhost:3000`
 ### 3. ✅ `is_super_user` is Business Logic, Not Authorization
 
 **Clarification**:
+
 - `is_super_user` grants unlimited letter allowances
 - Does NOT grant admin portal access
 - Does NOT provide elevated permissions
@@ -295,6 +310,7 @@ All documentation now consistently emphasizes:
 ## 📞 Support
 
 For questions about:
+
 - **AI Integration**: See section 6 in `.copilot-codeGeneration-instructions.md`
 - **Database**: See `DATABASE_FUNCTIONS.md`
 - **Security**: See `SECURITY_CHECKLIST.md`
@@ -307,6 +323,7 @@ For questions about:
 **Status**: All documentation is now aligned with the actual codebase implementation.
 
 **Current Stack**:
+
 - ✅ Next.js 16 App Router
 - ✅ OpenAI GPT-4 Turbo via Vercel AI SDK
 - ✅ Supabase (Database + Auth)
@@ -314,6 +331,7 @@ For questions about:
 - ✅ Vercel (Hosting)
 
 **Documentation**:
+
 - ✅ No conflicts
 - ✅ Consistent patterns
 - ✅ Clear guidance for AI assistants and developers
