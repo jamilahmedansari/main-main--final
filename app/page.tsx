@@ -214,7 +214,7 @@ export default function HomePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50/40 to-blue-50/30 text-gray-900 grid-pattern">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-sky-50/40 to-blue-50/30 text-gray-900 grid-pattern">
         {/* Navigation Header */}
         <nav
           className={`glass-card backdrop-blur-lg border-b border-sky-200/60 sticky top-0 z-50 transition-all duration-300 ${

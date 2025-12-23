@@ -181,7 +181,7 @@ export default function NewLandingPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-cyan-50 to-teal-50 text-gray-900 grid-pattern">
+      <div className="min-h-screen bg-linear-to-br from-white via-cyan-50 to-teal-50 text-gray-900 grid-pattern">
         {/* Navigation Header */}
         <nav
           className={`glass-card backdrop-blur-lg border-b border-blue-200 sticky top-0 z-50 transition-all duration-300 ${
