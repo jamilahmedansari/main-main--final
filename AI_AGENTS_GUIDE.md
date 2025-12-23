@@ -25,11 +25,13 @@
 **Talk-To-My-Lawyer** is an AI-powered legal letter SaaS platform with mandatory attorney review.
 
 ### User Flow
+
 ```
 User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → PDF Download/Email
 ```
 
 ### Tech Stack
+
 - **Frontend**: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, shadcn/ui
 - **Backend**: Supabase (PostgreSQL + RLS + Auth), Stripe, OpenAI via Vercel AI SDK
 - **Package Manager**: pnpm
@@ -37,11 +39,11 @@ User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → PDF Downloa
 
 ### Three-Role System
 
-| Role | Database Value | Access Level | Primary Routes |
-|------|---------------|--------------|----------------|
-| **Subscriber** | `subscriber` | Own letters, subscription, profile | `/dashboard/*` |
-| **Employee** | `employee` | Own coupons, commissions, referrals | `/dashboard/commissions`, `/dashboard/coupons` |
-| **Admin** | `admin` | Full system access | `/secure-admin-gateway/*` |
+| Role           | Database Value | Access Level                        | Primary Routes                                 |
+| -------------- | -------------- | ----------------------------------- | ---------------------------------------------- |
+| **Subscriber** | `subscriber`   | Own letters, subscription, profile  | `/dashboard/*`                                 |
+| **Employee**   | `employee`     | Own coupons, commissions, referrals | `/dashboard/commissions`, `/dashboard/coupons` |
+| **Admin**      | `admin`        | Full system access                  | `/secure-admin-gateway/*`                      |
 
 ---
 
@@ -50,6 +52,7 @@ User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → PDF Downloa
 ### ✅ User/Subscriber Features
 
 #### Authentication & Account Management
+
 - ✅ User signup with email/password
 - ✅ User login/logout
 - ✅ Forgot password / Reset password flow
@@ -59,6 +62,7 @@ User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → PDF Downloa
 - ✅ GDPR compliance (export data, delete account, privacy policy)
 
 #### Dashboard & Overview
+
 - ✅ User dashboard with stats overview
 - ✅ "My Letters" page (view all user's letters)
 - ✅ Individual letter detail view
@@ -67,6 +71,7 @@ User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → PDF Downloa
 - ✅ Billing history page
 
 #### Letter Generation System
+
 - ✅ Guided multi-step letter creation form
 - ✅ AI-powered letter generation (OpenAI GPT-4 Turbo via Vercel AI SDK)
 - ✅ Letter improvement/editing capability
@@ -77,10 +82,12 @@ User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → PDF Downloa
 - ✅ Letter allowance/credits system
 
 #### Letter Status Workflow
+
 ```
 draft → generating → pending_review → under_review → approved → completed
                                                    ↘ rejected (with feedback)
 ```
+
 - ✅ Real-time status tracking
 - ✅ Timeline visualization
 - ✅ Status change notifications
@@ -89,6 +96,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Resubmit capability for rejected letters
 
 #### Letter Actions (Approved Letters Only)
+
 - ✅ Preview letter content online
 - ✅ Download letter as PDF
 - ✅ Send letter via email
@@ -96,6 +104,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ View audit trail (history of changes)
 
 #### Subscription & Payments (Stripe Integration)
+
 - ✅ Stripe checkout session creation
 - ✅ Payment verification flow
 - ✅ Stripe webhook handling
@@ -113,6 +122,7 @@ draft → generating → pending_review → under_review → approved → comple
 ### ✅ Employee Features
 
 #### Dashboard & Overview
+
 - ✅ Employee dashboard with performance stats
 - ✅ Referrals tracking page
 - ✅ Commissions overview page
@@ -120,6 +130,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Employee settings page
 
 #### Coupon/Referral System
+
 - ✅ Automatic coupon code generation on employee signup
 - ✅ Unique coupon format: `EMP-XXXXXX` (6-char hash)
 - ✅ 20% discount for users using employee codes
@@ -129,6 +140,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Coupon analytics (usage count, total revenue)
 
 #### Commission System
+
 - ✅ Automatic commission calculation (5% of purchase)
 - ✅ Points system (1 point per coupon use)
 - ✅ Commission status tracking (pending → paid)
@@ -137,6 +149,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Earnings dashboard
 
 #### Security & Isolation
+
 - ✅ **CRITICAL**: Employees NEVER have access to letter content
 - ✅ RLS policies enforce employee isolation
 - ✅ Employee-specific database views
@@ -147,6 +160,7 @@ draft → generating → pending_review → under_review → approved → comple
 ### ✅ Admin Features
 
 #### Admin Authentication (Separate System)
+
 - ✅ Dedicated admin login portal (`/secure-admin-gateway/login`)
 - ✅ Dual authentication:
   - Email/password (from ENV variables)
@@ -156,6 +170,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Session verification middleware
 
 #### Admin Dashboard
+
 - ✅ Comprehensive analytics dashboard
 - ✅ System-wide metrics and KPIs
 - ✅ User statistics (total users, subscribers, employees)
@@ -164,6 +179,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Recent activity feed
 
 #### Letter Review System
+
 - ✅ Review queue (all pending letters)
 - ✅ Letter review interface with rich text editor
 - ✅ AI-powered improvement suggestions
@@ -177,6 +193,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Full audit trail for all letter actions
 
 #### User Management
+
 - ✅ View all users
 - ✅ User role management (view only - roles set on signup)
 - ✅ User search and filtering
@@ -185,6 +202,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Manage super user status (unlimited letters flag)
 
 #### Coupon & Commission Management
+
 - ✅ View all employee coupons
 - ✅ Create new coupon codes
 - ✅ Activate/deactivate coupons
@@ -194,6 +212,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Commission analytics and reporting
 
 #### Email Queue Management
+
 - ✅ Email queue dashboard
 - ✅ View pending/sent emails
 - ✅ Retry failed email deliveries
@@ -201,6 +220,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Manual email queue processing
 
 #### System Administration
+
 - ✅ System health monitoring
 - ✅ Database query optimization
 - ✅ Fraud detection tables (configured)
@@ -212,6 +232,7 @@ draft → generating → pending_review → under_review → approved → comple
 ### ✅ Backend/Infrastructure Features
 
 #### Database (Supabase PostgreSQL)
+
 - ✅ Complete normalized schema with 11+ tables
 - ✅ Row Level Security (RLS) on all tables
 - ✅ Role-based access policies
@@ -222,6 +243,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Database migrations system
 
 #### Core Tables
+
 ```
 - profiles (users, roles, settings)
 - subscriptions (plans, credits, status)
@@ -237,6 +259,7 @@ draft → generating → pending_review → under_review → approved → comple
 ```
 
 #### Database Functions (Key)
+
 - ✅ `check_letter_allowance(u_id)` - Check if user can generate letter
 - ✅ `deduct_letter_allowance(u_id)` - Deduct one letter credit
 - ✅ `log_letter_audit(...)` - Create audit trail entry
@@ -245,6 +268,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ `create_employee_coupon(emp_id)` - Auto-generate employee coupon
 
 #### API Architecture
+
 - ✅ 40+ RESTful API endpoints
 - ✅ Next.js App Router (route.ts convention)
 - ✅ Comprehensive error handling
@@ -255,6 +279,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Admin-only API endpoints with separate auth
 
 #### Security Features
+
 - ✅ Row Level Security (RLS) enforcement
 - ✅ Password hashing (bcrypt)
 - ✅ Secure session management
@@ -267,6 +292,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Fraud detection infrastructure
 
 #### Email System
+
 - ✅ Email queue for reliable delivery
 - ✅ Email templates
 - ✅ Retry logic for failed emails
@@ -274,6 +300,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Cron job for queue processing
 
 #### Payment Integration (Stripe)
+
 - ✅ Checkout session creation
 - ✅ Payment verification
 - ✅ Webhook handling
@@ -286,6 +313,7 @@ draft → generating → pending_review → under_review → approved → comple
 ### ✅ UI/UX Features
 
 #### Component Library
+
 - ✅ Full shadcn/ui component library integration
 - ✅ Custom components:
   - SubscriptionModal
@@ -303,6 +331,7 @@ draft → generating → pending_review → under_review → approved → comple
 - ✅ Error boundaries
 
 #### User Experience
+
 - ✅ Timeline animations for letter status
 - ✅ Real-time status updates
 - ✅ Form validation with helpful error messages
@@ -318,160 +347,178 @@ draft → generating → pending_review → under_review → approved → comple
 ## All Routes & Endpoints
 
 ### Summary
-| Category | Count |
-|----------|-------|
+
+| Category          | Count  |
+| ----------------- | ------ |
 | **API Endpoints** | **40** |
-| **Page Routes** | **37** |
-| **Total Routes** | **77** |
+| **Page Routes**   | **37** |
+| **Total Routes**  | **77** |
 
 ---
 
 ### API Endpoints (40 Total)
 
 #### Admin Authentication (2)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/admin-auth/login` | Public | Admin portal login (email + password + portal key) |
-| POST | `/api/admin-auth/logout` | Admin Session | Destroy admin session |
+
+| Method | Endpoint                 | Auth          | Description                                        |
+| ------ | ------------------------ | ------------- | -------------------------------------------------- |
+| POST   | `/api/admin-auth/login`  | Public        | Admin portal login (email + password + portal key) |
+| POST   | `/api/admin-auth/logout` | Admin Session | Destroy admin session                              |
 
 #### Admin Management (8)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/admin/analytics` | Admin Session | Get dashboard analytics |
-| GET | `/api/admin/coupons` | Admin Session | List all coupons |
-| POST | `/api/admin/coupons/create` | Admin Session | Create new coupon |
-| GET | `/api/admin/email-queue` | Admin Session | Get email queue status |
-| GET | `/api/admin/letters` | Admin Session | Get all letters (admin view) |
-| POST | `/api/admin/letters/batch` | Admin Session | Batch operations on letters |
-| GET | `/api/admin/users` | Admin Session | Get all users (implied from features) |
-| POST | `/api/admin/super-user` | Admin Session | Manage super user status |
+
+| Method | Endpoint                    | Auth          | Description                           |
+| ------ | --------------------------- | ------------- | ------------------------------------- |
+| GET    | `/api/admin/analytics`      | Admin Session | Get dashboard analytics               |
+| GET    | `/api/admin/coupons`        | Admin Session | List all coupons                      |
+| POST   | `/api/admin/coupons/create` | Admin Session | Create new coupon                     |
+| GET    | `/api/admin/email-queue`    | Admin Session | Get email queue status                |
+| GET    | `/api/admin/letters`        | Admin Session | Get all letters (admin view)          |
+| POST   | `/api/admin/letters/batch`  | Admin Session | Batch operations on letters           |
+| GET    | `/api/admin/users`          | Admin Session | Get all users (implied from features) |
+| POST   | `/api/admin/super-user`     | Admin Session | Manage super user status              |
 
 #### User Authentication (3)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/auth/reset-password` | Public | Request password reset email |
-| POST | `/api/auth/update-password` | Reset Token | Update password with reset token |
-| POST | `/api/create-profile` | Supabase Auth | Create/update user profile |
+
+| Method | Endpoint                    | Auth          | Description                      |
+| ------ | --------------------------- | ------------- | -------------------------------- |
+| POST   | `/api/auth/reset-password`  | Public        | Request password reset email     |
+| POST   | `/api/auth/update-password` | Reset Token   | Update password with reset token |
+| POST   | `/api/create-profile`       | Supabase Auth | Create/update user profile       |
 
 #### Stripe/Payments (3)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/create-checkout` | Supabase Auth | Create Stripe checkout session |
-| POST | `/api/stripe/webhook` | Stripe Signature | Handle Stripe webhooks |
-| GET/POST | `/api/verify-payment` | Supabase Auth | Verify payment success |
+
+| Method   | Endpoint               | Auth             | Description                    |
+| -------- | ---------------------- | ---------------- | ------------------------------ |
+| POST     | `/api/create-checkout` | Supabase Auth    | Create Stripe checkout session |
+| POST     | `/api/stripe/webhook`  | Stripe Signature | Handle Stripe webhooks         |
+| GET/POST | `/api/verify-payment`  | Supabase Auth    | Verify payment success         |
 
 #### Subscriptions (4)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/subscriptions/activate` | Supabase Auth | Activate subscription |
-| GET | `/api/subscriptions/billing-history` | Supabase Auth | Get billing history |
-| GET | `/api/subscriptions/check-allowance` | Supabase Auth | Check remaining letter allowance |
-| POST | `/api/subscriptions/reset-monthly` | Cron Secret | Reset monthly allowances (cron) |
+
+| Method | Endpoint                             | Auth          | Description                      |
+| ------ | ------------------------------------ | ------------- | -------------------------------- |
+| POST   | `/api/subscriptions/activate`        | Supabase Auth | Activate subscription            |
+| GET    | `/api/subscriptions/billing-history` | Supabase Auth | Get billing history              |
+| GET    | `/api/subscriptions/check-allowance` | Supabase Auth | Check remaining letter allowance |
+| POST   | `/api/subscriptions/reset-monthly`   | Cron Secret   | Reset monthly allowances (cron)  |
 
 #### Letters (3)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/generate-letter` | Supabase Auth | Generate new letter via AI |
-| GET | `/api/letters/drafts` | Supabase Auth | Get user's draft letters |
-| POST | `/api/letters/improve` | Admin | Improve letter content via AI |
+
+| Method | Endpoint               | Auth          | Description                   |
+| ------ | ---------------------- | ------------- | ----------------------------- |
+| POST   | `/api/generate-letter` | Supabase Auth | Generate new letter via AI    |
+| GET    | `/api/letters/drafts`  | Supabase Auth | Get user's draft letters      |
+| POST   | `/api/letters/improve` | Admin         | Improve letter content via AI |
 
 #### Letter Actions (by ID) (11)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/letters/[id]/approve` | Admin Session | Admin approves letter |
-| GET | `/api/letters/[id]/audit` | Supabase Auth | Get letter audit trail |
-| POST | `/api/letters/[id]/complete` | Admin Session | Mark letter as completed |
-| DELETE | `/api/letters/[id]/delete` | Supabase Auth | Delete a letter (owner only) |
-| POST | `/api/letters/[id]/improve` | Admin Session | Improve specific letter |
-| GET | `/api/letters/[id]/pdf` | Supabase Auth | Download letter as PDF |
-| POST | `/api/letters/[id]/reject` | Admin Session | Admin rejects letter |
-| POST | `/api/letters/[id]/resubmit` | Supabase Auth | User resubmits rejected letter |
-| POST | `/api/letters/[id]/send-email` | Supabase Auth | Send letter via email |
-| POST | `/api/letters/[id]/start-review` | Admin Session | Admin starts reviewing letter |
-| POST | `/api/letters/[id]/submit` | Supabase Auth | Submit letter for review |
+
+| Method | Endpoint                         | Auth          | Description                    |
+| ------ | -------------------------------- | ------------- | ------------------------------ |
+| POST   | `/api/letters/[id]/approve`      | Admin Session | Admin approves letter          |
+| GET    | `/api/letters/[id]/audit`        | Supabase Auth | Get letter audit trail         |
+| POST   | `/api/letters/[id]/complete`     | Admin Session | Mark letter as completed       |
+| DELETE | `/api/letters/[id]/delete`       | Supabase Auth | Delete a letter (owner only)   |
+| POST   | `/api/letters/[id]/improve`      | Admin Session | Improve specific letter        |
+| GET    | `/api/letters/[id]/pdf`          | Supabase Auth | Download letter as PDF         |
+| POST   | `/api/letters/[id]/reject`       | Admin Session | Admin rejects letter           |
+| POST   | `/api/letters/[id]/resubmit`     | Supabase Auth | User resubmits rejected letter |
+| POST   | `/api/letters/[id]/send-email`   | Supabase Auth | Send letter via email          |
+| POST   | `/api/letters/[id]/start-review` | Admin Session | Admin starts reviewing letter  |
+| POST   | `/api/letters/[id]/submit`       | Supabase Auth | Submit letter for review       |
 
 #### Employee (2)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET/POST | `/api/employee/payouts` | Supabase Auth (Employee) | Get/request employee payouts |
-| GET | `/api/employee/referral-link` | Supabase Auth (Employee) | Get employee referral link |
+
+| Method   | Endpoint                      | Auth                     | Description                  |
+| -------- | ----------------------------- | ------------------------ | ---------------------------- |
+| GET/POST | `/api/employee/payouts`       | Supabase Auth (Employee) | Get/request employee payouts |
+| GET      | `/api/employee/referral-link` | Supabase Auth (Employee) | Get employee referral link   |
 
 #### GDPR Compliance (3)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/gdpr/accept-privacy-policy` | Supabase Auth | Accept privacy policy |
-| POST | `/api/gdpr/delete-account` | Supabase Auth | Delete user account & all data |
-| GET | `/api/gdpr/export-data` | Supabase Auth | Export all user data (JSON) |
+
+| Method | Endpoint                          | Auth          | Description                    |
+| ------ | --------------------------------- | ------------- | ------------------------------ |
+| POST   | `/api/gdpr/accept-privacy-policy` | Supabase Auth | Accept privacy policy          |
+| POST   | `/api/gdpr/delete-account`        | Supabase Auth | Delete user account & all data |
+| GET    | `/api/gdpr/export-data`           | Supabase Auth | Export all user data (JSON)    |
 
 #### Health & Cron (3)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/health` | Public | Basic health check |
-| GET | `/api/health/detailed` | Public | Detailed health check with DB status |
-| GET | `/api/cron/process-email-queue` | Cron Secret | Process queued emails (cron job) |
+
+| Method | Endpoint                        | Auth        | Description                          |
+| ------ | ------------------------------- | ----------- | ------------------------------------ |
+| GET    | `/api/health`                   | Public      | Basic health check                   |
+| GET    | `/api/health/detailed`          | Public      | Detailed health check with DB status |
+| GET    | `/api/cron/process-email-queue` | Cron Secret | Process queued emails (cron job)     |
 
 ---
 
 ### Page Routes (37 Total)
 
 #### Public Pages (1)
-| Route | Description | Access |
-|-------|-------------|--------|
-| `/` | Landing page / Home | Public |
+
+| Route | Description         | Access |
+| ----- | ------------------- | ------ |
+| `/`   | Landing page / Home | Public |
 
 #### Authentication Pages (5)
-| Route | Description | Access |
-|-------|-------------|--------|
-| `/auth/login` | User login page | Public |
-| `/auth/signup` | User signup page | Public |
-| `/auth/forgot-password` | Forgot password page | Public |
-| `/auth/reset-password` | Reset password page (with token) | Public |
-| `/auth/check-email` | Check email verification page | Public |
+
+| Route                   | Description                      | Access |
+| ----------------------- | -------------------------------- | ------ |
+| `/auth/login`           | User login page                  | Public |
+| `/auth/signup`          | User signup page                 | Public |
+| `/auth/forgot-password` | Forgot password page             | Public |
+| `/auth/reset-password`  | Reset password page (with token) | Public |
+| `/auth/check-email`     | Check email verification page    | Public |
 
 #### User Dashboard (6)
-| Route | Description | Access |
-|-------|-------------|--------|
-| `/dashboard` | User dashboard home | Authenticated |
-| `/dashboard/letters` | My Letters list | Subscriber |
-| `/dashboard/letters/new` | Create new letter form | Subscriber |
+
+| Route                     | Description                  | Access             |
+| ------------------------- | ---------------------------- | ------------------ |
+| `/dashboard`              | User dashboard home          | Authenticated      |
+| `/dashboard/letters`      | My Letters list              | Subscriber         |
+| `/dashboard/letters/new`  | Create new letter form       | Subscriber         |
 | `/dashboard/letters/[id]` | View specific letter details | Subscriber (owner) |
-| `/dashboard/subscription` | Subscription management | Subscriber |
-| `/dashboard/billing` | Billing history | Subscriber |
+| `/dashboard/subscription` | Subscription management      | Subscriber         |
+| `/dashboard/billing`      | Billing history              | Subscriber         |
 
 #### Employee Dashboard (5)
-| Route | Description | Access |
-|-------|-------------|--------|
-| `/dashboard/referrals` | Employee referrals tracking | Employee |
-| `/dashboard/commissions` | Employee commissions page | Employee |
-| `/dashboard/payouts` | Employee payouts page | Employee |
-| `/dashboard/coupons` | Employee coupons page | Employee |
-| `/dashboard/employee-settings` | Employee settings | Employee |
+
+| Route                          | Description                 | Access   |
+| ------------------------------ | --------------------------- | -------- |
+| `/dashboard/referrals`         | Employee referrals tracking | Employee |
+| `/dashboard/commissions`       | Employee commissions page   | Employee |
+| `/dashboard/payouts`           | Employee payouts page       | Employee |
+| `/dashboard/coupons`           | Employee coupons page       | Employee |
+| `/dashboard/employee-settings` | Employee settings           | Employee |
 
 #### Admin Portal (10)
-| Route | Description | Access |
-|-------|-------------|--------|
-| `/secure-admin-gateway` | Admin gateway redirect | Admin Session |
-| `/secure-admin-gateway/login` | Admin login page | Public |
-| `/secure-admin-gateway/dashboard` | Admin dashboard home | Admin Session |
-| `/secure-admin-gateway/dashboard/users` | Manage all users | Admin Session |
-| `/secure-admin-gateway/dashboard/letters` | Manage all letters | Admin Session |
-| `/secure-admin-gateway/dashboard/all-letters` | View all letters list | Admin Session |
-| `/secure-admin-gateway/dashboard/analytics` | Analytics dashboard | Admin Session |
-| `/secure-admin-gateway/dashboard/coupons` | Manage coupons | Admin Session |
-| `/secure-admin-gateway/dashboard/commissions` | View commissions | Admin Session |
+
+| Route                                         | Description            | Access        |
+| --------------------------------------------- | ---------------------- | ------------- |
+| `/secure-admin-gateway`                       | Admin gateway redirect | Admin Session |
+| `/secure-admin-gateway/login`                 | Admin login page       | Public        |
+| `/secure-admin-gateway/dashboard`             | Admin dashboard home   | Admin Session |
+| `/secure-admin-gateway/dashboard/users`       | Manage all users       | Admin Session |
+| `/secure-admin-gateway/dashboard/letters`     | Manage all letters     | Admin Session |
+| `/secure-admin-gateway/dashboard/all-letters` | View all letters list  | Admin Session |
+| `/secure-admin-gateway/dashboard/analytics`   | Analytics dashboard    | Admin Session |
+| `/secure-admin-gateway/dashboard/coupons`     | Manage coupons         | Admin Session |
+| `/secure-admin-gateway/dashboard/commissions` | View commissions       | Admin Session |
 | `/secure-admin-gateway/dashboard/email-queue` | Email queue management | Admin Session |
 
 #### Admin Review System (2)
-| Route | Description | Access |
-|-------|-------------|--------|
-| `/secure-admin-gateway/review` | Letter review queue | Admin Session |
+
+| Route                               | Description            | Access        |
+| ----------------------------------- | ---------------------- | ------------- |
+| `/secure-admin-gateway/review`      | Letter review queue    | Admin Session |
 | `/secure-admin-gateway/review/[id]` | Review specific letter | Admin Session |
 
 #### Legacy/Blocked Routes (8)
-| Route | Description | Status |
-|-------|-------------|--------|
+
+| Route                | Description        | Status                    |
+| -------------------- | ------------------ | ------------------------- |
 | `/dashboard/admin/*` | Legacy admin pages | **Blocked by middleware** |
-| `/admin/*` | Alternate admin UI | **Deprecated** |
+| `/admin/*`           | Alternate admin UI | **Deprecated**            |
 
 ---
 
@@ -482,6 +529,7 @@ draft → generating → pending_review → under_review → approved → comple
 **This is NOT a greenfield project. The app is 95% complete.**
 
 ✅ **DO:**
+
 - Add new API endpoints in existing `app/api/` structure
 - Create new components following existing patterns
 - Add new pages under existing route groups
@@ -490,6 +538,7 @@ draft → generating → pending_review → under_review → approved → comple
 - Add validation and error handling
 
 ❌ **DON'T:**
+
 - Rebuild routing or folder structure
 - Replace existing UI components
 - Drop/recreate database tables
@@ -501,33 +550,42 @@ draft → generating → pending_review → under_review → approved → comple
 
 ### ⚠️ RULE #2: Role Authorization
 
-#### Three Roles, One Admin
+#### Three Roles, One Admin (Who IS the Licensed Attorney)
 
-| Role | Database | Access | Critical Rule |
-|------|----------|--------|---------------|
-| `subscriber` | `role='subscriber'` | Own letters, subscription | First letter free, then credits |
-| `employee` | `role='employee'` | Own coupons, commissions | **NEVER access letter content** |
-| `admin` | `role='admin'` | Full system access | **Only ONE admin in system** |
+| Role         | Database            | Access                    | Critical Rule                                        |
+| ------------ | ------------------- | ------------------------- | ---------------------------------------------------- |
+| `subscriber` | `role='subscriber'` | Own letters, subscription | First letter free, then credits                      |
+| `employee`   | `role='employee'`   | Own coupons, commissions  | **Salespeople, NOT lawyers - NEVER access letters**  |
+| `admin`      | `role='admin'`      | Full system access        | **Single licensed attorney who reviews ALL letters** |
 
 #### is_super_user vs admin (CRITICAL!)
 
 ```typescript
 // ❌ WRONG - is_super_user is NOT admin
-if (profile.is_super_user) { /* admin logic */ }
+if (profile.is_super_user) {
+  /* admin logic */
+}
 
 // ✅ CORRECT - is_super_user means unlimited letters ONLY
-if (profile.is_super_user) { /* skip credit check */ }
+if (profile.is_super_user) {
+  /* skip credit check */
+}
 
 // ✅ CORRECT - admin check
-if (profile.role === 'admin') { /* admin logic */ }
+if (profile.role === "admin") {
+  /* admin logic */
+}
 ```
 
 **Key Points:**
+
 - `is_super_user` is a **business flag** for unlimited letter allowance
 - `is_super_user` does NOT grant admin portal access
 - Always use `role = 'admin'` for authorization checks
 - Never create UI to promote users to admin
 - There is exactly ONE admin user (seeded via script)
+- **Admin IS the licensed attorney** - no separate `is_licensed_attorney` column needed
+- **Employees are salespeople** - they sell the service but never see letter content
 
 ---
 
@@ -539,6 +597,7 @@ draft → generating → pending_review → under_review → approved → comple
 ```
 
 #### Status Rules (CRITICAL)
+
 1. **Unapproved letters**: Content HIDDEN from subscriber (show "Under Review")
 2. **Approved letters**: Full content visible, PDF/email enabled
 3. **All transitions**: MUST log via `log_letter_audit()`
@@ -547,13 +606,13 @@ draft → generating → pending_review → under_review → approved → comple
 
 ```typescript
 // ALWAYS audit status changes
-await supabase.rpc('log_letter_audit', {
+await supabase.rpc("log_letter_audit", {
   p_letter_id: letterId,
-  p_action: 'approved',
-  p_old_status: 'under_review',
-  p_new_status: 'approved',
-  p_notes: 'Approved by admin'
-})
+  p_action: "approved",
+  p_old_status: "under_review",
+  p_new_status: "approved",
+  p_notes: "Approved by admin",
+});
 ```
 
 ---
@@ -562,15 +621,16 @@ await supabase.rpc('log_letter_audit', {
 
 ```typescript
 // Server components/API routes - ALWAYS use server client
-import { createClient } from "@/lib/supabase/server"
-const supabase = await createClient()
+import { createClient } from "@/lib/supabase/server";
+const supabase = await createClient();
 
 // Client components ONLY
-import { createClient } from "@/lib/supabase/client"
-const supabase = createClient()
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
 ```
 
 **Never:**
+
 - Use service role key in user-facing code
 - Bypass RLS policies
 - Use client in server-side code
@@ -583,6 +643,7 @@ const supabase = createClient()
 #### Separate Admin Portal System
 
 **Admin session is SEPARATE from Supabase Auth:**
+
 1. Admin logs in via `/secure-admin-gateway/login`
 2. Requires: email + password + portal key (all from ENV)
 3. Creates separate cookie-based session
@@ -591,15 +652,16 @@ const supabase = createClient()
 
 ```typescript
 // Admin portal check
-import { isAdminAuthenticated } from "@/lib/auth/admin-session"
+import { isAdminAuthenticated } from "@/lib/auth/admin-session";
 
-const isAdmin = await isAdminAuthenticated()
+const isAdmin = await isAdminAuthenticated();
 if (!isAdmin) {
-  return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+  return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
 }
 ```
 
 **Never:**
+
 - Create multiple admin accounts
 - Allow signup as admin
 - Bypass portal key requirement
@@ -612,30 +674,34 @@ if (!isAdmin) {
 ### API Route Standard Pattern
 
 ```typescript
-import { createClient } from "@/lib/supabase/server"
-import { NextRequest, NextResponse } from "next/server"
+import { createClient } from "@/lib/supabase/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
+    const supabase = await createClient();
 
     // 1. Auth check
-    const { data: { user }, error } = await supabase.auth.getUser()
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+    if (!user)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     // 2. Role check (if needed)
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", user.id)
-      .single()
+      .single();
 
-    if (profile.role !== 'subscriber') {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    if (profile.role !== "subscriber") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     // 3. Parse and validate input
-    const body = await request.json()
+    const body = await request.json();
     // ... validation
 
     // 4. Business logic (RLS auto-enforces access)
@@ -643,15 +709,15 @@ export async function POST(request: NextRequest) {
       .from("letters")
       .insert({ user_id: user.id, ...body })
       .select()
-      .single()
+      .single();
 
-    if (dbError) throw dbError
+    if (dbError) throw dbError;
 
     // 5. Response
-    return NextResponse.json({ success: true, data })
+    return NextResponse.json({ success: true, data });
   } catch (error: any) {
-    console.error("[API] Error:", error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error("[API] Error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 ```
@@ -662,24 +728,24 @@ export async function POST(request: NextRequest) {
 
 ```typescript
 // ✅ CORRECT - Use RPC functions for business logic
-const { data: allowance } = await supabase.rpc('check_letter_allowance', {
-  u_id: userId
-})
+const { data: allowance } = await supabase.rpc("check_letter_allowance", {
+  u_id: userId,
+});
 
 if (!allowance.has_allowance && !allowance.is_super) {
-  return NextResponse.json({ needsSubscription: true }, { status: 403 })
+  return NextResponse.json({ needsSubscription: true }, { status: 403 });
 }
 
 // ✅ CORRECT - RLS auto-filters by user
 const { data: letters } = await supabase
   .from("letters")
   .select("*")
-  .eq("user_id", userId)
+  .eq("user_id", userId);
 
 // ❌ WRONG - Don't bypass RLS
 const { data: letters } = await adminClient // service role
   .from("letters")
-  .select("*") // This bypasses RLS!
+  .select("*"); // This bypasses RLS!
 ```
 
 ---
@@ -687,21 +753,21 @@ const { data: letters } = await adminClient // service role
 ### TypeScript Pattern
 
 ```typescript
-import { Database } from "@/lib/database.types"
+import { Database } from "@/lib/database.types";
 
-type Profile = Database["public"]["Tables"]["profiles"]["Row"]
-type Letter = Database["public"]["Tables"]["letters"]["Row"]
-type LetterStatus = Database["public"]["Enums"]["letter_status"]
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type Letter = Database["public"]["Tables"]["letters"]["Row"];
+type LetterStatus = Database["public"]["Enums"]["letter_status"];
 
 // Use proper types
 interface LetterResponse {
-  letter: Letter
-  aiDraft: string
-  isFreeTrial: boolean
+  letter: Letter;
+  aiDraft: string;
+  isFreeTrial: boolean;
 }
 
 // Never use 'any' without justification
-const response: LetterResponse = await generateLetter(data)
+const response: LetterResponse = await generateLetter(data);
 ```
 
 ---
@@ -709,14 +775,14 @@ const response: LetterResponse = await generateLetter(data)
 ### Component Pattern
 
 ```typescript
-'use client' // Only if needed for interactivity
+"use client"; // Only if needed for interactivity
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 interface LetterCardProps {
-  letter: Letter
-  onView?: (id: string) => void
+  letter: Letter;
+  onView?: (id: string) => void;
 }
 
 export function LetterCard({ letter, onView }: LetterCardProps) {
@@ -724,11 +790,9 @@ export function LetterCard({ letter, onView }: LetterCardProps) {
     <Card>
       <h3>{letter.letter_type}</h3>
       <p>Status: {letter.status}</p>
-      <Button onClick={() => onView?.(letter.id)}>
-        View Details
-      </Button>
+      <Button onClick={() => onView?.(letter.id)}>View Details</Button>
     </Card>
-  )
+  );
 }
 ```
 
@@ -914,11 +978,13 @@ POST /api/gdpr/accept-privacy-policy
 **Provider:** OpenAI GPT-4 Turbo via Vercel AI SDK
 
 **Architecture:**
+
 ```
 Client → Next.js API Route → Vercel AI SDK → OpenAI GPT-4 → Response
 ```
 
 **Benefits:**
+
 - ✅ Type-safe end-to-end
 - ✅ Built-in streaming support
 - ✅ Single deployment pipeline
@@ -928,45 +994,53 @@ Client → Next.js API Route → Vercel AI SDK → OpenAI GPT-4 → Response
 ### Standard AI Pattern
 
 ```typescript
-import { openai } from "@ai-sdk/openai"
-import { generateText } from "ai"
+import { openai } from "@ai-sdk/openai";
+import { generateText } from "ai";
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
+    const supabase = await createClient();
 
     // 1. Auth check
-    const { data: { user }, error } = await supabase.auth.getUser()
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+    if (!user)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     // 2. Validate API key
     if (!process.env.OPENAI_API_KEY) {
-      console.error("[AI] Missing OPENAI_API_KEY")
-      return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
+      console.error("[AI] Missing OPENAI_API_KEY");
+      return NextResponse.json(
+        { error: "Server configuration error" },
+        { status: 500 }
+      );
     }
 
     // 3. Build prompt
-    const prompt = buildPrompt(/* your params */)
+    const prompt = buildPrompt(/* your params */);
 
     // 4. Call OpenAI via Vercel AI SDK
     const { text: generatedContent } = await generateText({
       model: openai("gpt-4-turbo"),
-      system: "You are a professional legal attorney drafting formal legal letters...",
+      system:
+        "You are a professional legal attorney drafting formal legal letters...",
       prompt,
       temperature: 0.7,
       maxTokens: 2048,
-    })
+    });
 
     // 5. Validate response
     if (!generatedContent) {
-      throw new Error("AI returned empty content")
+      throw new Error("AI returned empty content");
     }
 
     // 6. Return result
-    return NextResponse.json({ content: generatedContent })
+    return NextResponse.json({ content: generatedContent });
   } catch (error: any) {
-    console.error("[AI] Generation error:", error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error("[AI] Generation error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 ```
@@ -984,7 +1058,7 @@ const { data: newLetter } = await supabase
     intake_data: intakeData,
   })
   .select()
-  .single()
+  .single();
 
 try {
   // Generate letter using AI
@@ -994,7 +1068,7 @@ try {
     prompt: buildPrompt(letterType, intakeData),
     temperature: 0.7,
     maxTokens: 2048,
-  })
+  });
 
   // Update letter with generated content
   await supabase
@@ -1003,7 +1077,7 @@ try {
       ai_draft_content: generatedContent,
       status: "pending_review",
     })
-    .eq("id", newLetter.id)
+    .eq("id", newLetter.id);
 
   // Log audit trail
   await supabase.rpc("log_letter_audit", {
@@ -1012,21 +1086,21 @@ try {
     p_old_status: "generating",
     p_new_status: "pending_review",
     p_notes: "Letter generated successfully by AI",
-  })
+  });
 
   return NextResponse.json({
     success: true,
     letterId: newLetter.id,
     aiDraft: generatedContent,
-  })
+  });
 } catch (error) {
   // Mark as failed on error
   await supabase
     .from("letters")
     .update({ status: "failed" })
-    .eq("id", newLetter.id)
+    .eq("id", newLetter.id);
 
-  throw error
+  throw error;
 }
 ```
 
@@ -1060,18 +1134,20 @@ try {
 
 ```typescript
 // Check allowance
-const { data: allowance } = await supabase.rpc('check_letter_allowance', { u_id: userId })
+const { data: allowance } = await supabase.rpc("check_letter_allowance", {
+  u_id: userId,
+});
 
 // First letter is free
 const existingLetters = await supabase
   .from("letters")
   .select("id")
-  .eq("user_id", userId)
+  .eq("user_id", userId);
 
-const isFreeTrial = existingLetters.length === 0
+const isFreeTrial = existingLetters.length === 0;
 
 if (!isFreeTrial && !allowance.has_allowance && !allowance.is_super) {
-  return NextResponse.json({ needsSubscription: true }, { status: 403 })
+  return NextResponse.json({ needsSubscription: true }, { status: 403 });
 }
 
 // Generate letter (see AI Integration Guide)
@@ -1079,7 +1155,7 @@ if (!isFreeTrial && !allowance.has_allowance && !allowance.is_super) {
 
 // Deduct credit (if not free trial)
 if (!isFreeTrial && !allowance.is_super) {
-  await supabase.rpc('deduct_letter_allowance', { u_id: userId })
+  await supabase.rpc("deduct_letter_allowance", { u_id: userId });
 }
 ```
 
@@ -1090,7 +1166,7 @@ if (!isFreeTrial && !allowance.is_super) {
 await supabase
   .from("letters")
   .update({ status: "under_review" })
-  .eq("id", letterId)
+  .eq("id", letterId);
 
 await supabase.rpc("log_letter_audit", {
   p_letter_id: letterId,
@@ -1098,16 +1174,16 @@ await supabase.rpc("log_letter_audit", {
   p_old_status: "pending_review",
   p_new_status: "under_review",
   p_notes: "Admin started review",
-})
+});
 
 // Approve letter
 await supabase
   .from("letters")
   .update({
     status: "approved",
-    final_content: editedContent
+    final_content: editedContent,
   })
-  .eq("id", letterId)
+  .eq("id", letterId);
 
 await supabase.rpc("log_letter_audit", {
   p_letter_id: letterId,
@@ -1115,49 +1191,47 @@ await supabase.rpc("log_letter_audit", {
   p_old_status: "under_review",
   p_new_status: "approved",
   p_notes: "Letter approved by admin",
-})
+});
 ```
 
 ### 3. Employee Coupon Redemption
 
 ```typescript
 // Validate coupon
-const { data: coupon } = await supabase.rpc('validate_coupon', {
-  code: couponCode
-})
+const { data: coupon } = await supabase.rpc("validate_coupon", {
+  code: couponCode,
+});
 
 if (!coupon.valid) {
-  return NextResponse.json({ error: "Invalid coupon" }, { status: 400 })
+  return NextResponse.json({ error: "Invalid coupon" }, { status: 400 });
 }
 
 // Apply discount in Stripe checkout
 const session = await stripe.checkout.sessions.create({
   // ... other params
-  discounts: [{
-    coupon: couponCode // 20% off
-  }]
-})
+  discounts: [
+    {
+      coupon: couponCode, // 20% off
+    },
+  ],
+});
 
 // On successful payment (webhook):
 // 1. Record coupon usage
-await supabase
-  .from("coupon_usage")
-  .insert({
-    coupon_id: coupon.id,
-    user_id: userId,
-    order_id: session.id
-  })
+await supabase.from("coupon_usage").insert({
+  coupon_id: coupon.id,
+  user_id: userId,
+  order_id: session.id,
+});
 
 // 2. Create commission
-await supabase
-  .from("commissions")
-  .insert({
-    employee_id: coupon.employee_id,
-    amount: session.amount_total * 0.05, // 5%
-    status: "pending",
-    coupon_code: couponCode,
-    order_id: session.id
-  })
+await supabase.from("commissions").insert({
+  employee_id: coupon.employee_id,
+  amount: session.amount_total * 0.05, // 5%
+  status: "pending",
+  coupon_code: couponCode,
+  order_id: session.id,
+});
 ```
 
 ### 4. Subscription Purchase
@@ -1165,29 +1239,29 @@ await supabase
 ```typescript
 // Create Stripe checkout
 const session = await stripe.checkout.sessions.create({
-  mode: 'subscription',
-  line_items: [{
-    price: priceId, // from Stripe dashboard
-    quantity: 1,
-  }],
+  mode: "subscription",
+  line_items: [
+    {
+      price: priceId, // from Stripe dashboard
+      quantity: 1,
+    },
+  ],
   success_url: `${baseUrl}/verify-payment?session_id={CHECKOUT_SESSION_ID}`,
   cancel_url: `${baseUrl}/dashboard/subscription`,
   metadata: {
     userId: user.id,
-    planType: 'monthly' // or 'yearly'
-  }
-})
+    planType: "monthly", // or 'yearly'
+  },
+});
 
 // On webhook (successful payment):
-await supabase
-  .from("subscriptions")
-  .insert({
-    user_id: userId,
-    plan_type: planType,
-    status: "active",
-    credits_remaining: planType === 'monthly' ? 4 : 8,
-    stripe_subscription_id: subscription.id
-  })
+await supabase.from("subscriptions").insert({
+  user_id: userId,
+  plan_type: planType,
+  status: "active",
+  credits_remaining: planType === "monthly" ? 4 : 8,
+  stripe_subscription_id: subscription.id,
+});
 ```
 
 ---
@@ -1351,6 +1425,7 @@ talk-to-my-lawyer/
 ### Extension, Not Reconstruction
 
 **This app is 95% complete. Your job is to:**
+
 - ✅ Add missing features
 - ✅ Fix bugs
 - ✅ Improve existing code
@@ -1358,6 +1433,7 @@ talk-to-my-lawyer/
 - ✅ Add validation and error handling
 
 **Your job is NOT to:**
+
 - ❌ Rebuild the architecture
 - ❌ Replace working systems
 - ❌ Redesign the database
@@ -1367,6 +1443,7 @@ talk-to-my-lawyer/
 ### Pattern Matching
 
 Before writing new code:
+
 1. **Search** for similar existing functionality
 2. **Copy** the patterns you find
 3. **Extend** with your specific logic

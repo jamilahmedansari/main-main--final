@@ -28,9 +28,9 @@ User → Letter Form → AI Draft (GPT-4 Turbo) → Admin Review → PDF Downloa
 
 ### Single Admin Model (Critical)
 
-There is **exactly ONE admin account** in the system.
+There is **exactly ONE admin account** in the system - this admin IS the licensed attorney.
 
-This **single admin** is responsible for:
+This **single admin (licensed attorney)** is responsible for:
 
 - Reviewing every submitted letter in the **Review Center**
 - **Editing/improving** letter content (including via AI assist)
@@ -41,6 +41,8 @@ This **single admin** is responsible for:
   - Employee commission totals and related metrics
 
 > ⚠️ `is_super_user` = unlimited letters (subscriber business feature), **NOT** admin privilege.
+>
+> ⚠️ Employees are **salespeople**, NOT lawyers. They sell the service but never access letter content.
 
 **Admin portal access rules**
 
