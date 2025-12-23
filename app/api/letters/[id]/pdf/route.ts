@@ -1,115 +1,128 @@
-import { jsPDF } from 'jspdf'
-import { createClient } from '@/lib/supabase/server'
-import { NextRequest, NextResponse } from 'next/server'
+import { jsPDF } from "jspdf";
+import { createClient } from "@/lib/supabase/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
-    const supabase = await createClient()
-    
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { id } = await params;
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Fetch letter and verify ownership
     const { data: letter, error: letterError } = await supabase
-      .from('letters')
-      .select('*, profiles(full_name)')
-      .eq('id', id)
-      .single()
+      .from("letters")
+      .select("*, profiles(full_name)")
+      .eq("id", id)
+      .single();
 
     if (letterError || !letter) {
-      return NextResponse.json({ error: 'Letter not found' }, { status: 404 })
+      return NextResponse.json({ error: "Letter not found" }, { status: 404 });
     }
 
     // Verify user can access this letter (owner or admin)
     const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
 
-    if (letter.status !== 'approved') {
-      return NextResponse.json({ 
-        error: 'Only approved letters can be downloaded as PDF' 
-      }, { status: 403 })
+    if (letter.status !== "approved") {
+      return NextResponse.json(
+        {
+          error: "Only approved letters can be downloaded as PDF",
+        },
+        { status: 403 }
+      );
     }
 
-    if (letter.user_id !== user.id && profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (letter.user_id !== user.id && profile?.role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const content = letter.final_content || letter.ai_draft_content || ''
-    const safeTitle = letter.title?.trim() || 'letter'
-    const fileName = `${safeTitle.replace(/[^a-z0-9]/gi, '_') || 'letter'}.pdf`
+    const content = letter.final_content || letter.ai_draft_content || "";
+    const safeTitle = letter.title?.trim() || "letter";
+    const fileName = `${safeTitle.replace(/[^a-z0-9]/gi, "_") || "letter"}.pdf`;
 
-    // Determine footer text based on reviewer qualification
-    let footerReviewText = 'This document has been reviewed and approved for professional formatting and clarity.'
-    let footerDisclaimer = 'This is not legal advice. Consult a licensed attorney for legal matters.'
+    // Determine footer text based on reviewer role
+    // In our single-admin model, admin IS the licensed attorney
+    let footerReviewText =
+      "This document has been reviewed and approved for professional formatting and clarity.";
+    let footerDisclaimer =
+      "This is not legal advice. Consult a licensed attorney for legal matters.";
 
     if (letter.reviewed_by) {
-       const { data: reviewer } = await supabase
-        .from('profiles')
-        .select('is_licensed_attorney')
-        .eq('id', letter.reviewed_by)
-        .single()
-      
-      if (reviewer?.is_licensed_attorney) {
-        footerReviewText = 'This document has been reviewed by a licensed attorney.'
-        footerDisclaimer = 'This does not constitute an attorney-client relationship.'
+      const { data: reviewer } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", letter.reviewed_by)
+        .single();
+
+      // Admin role = licensed attorney in our single-admin model
+      if (reviewer?.role === "admin") {
+        footerReviewText =
+          "This document has been reviewed by a licensed attorney.";
+        footerDisclaimer =
+          "This does not constitute an attorney-client relationship.";
       }
     }
 
-    const doc = new jsPDF({ unit: 'pt', format: 'letter' })
-    const pageWidth = doc.internal.pageSize.getWidth()
-    const pageHeight = doc.internal.pageSize.getHeight()
-    const margin = 50
+    const doc = new jsPDF({ unit: "pt", format: "letter" });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 50;
 
-    doc.setFont('Times', 'normal')
-    doc.setFontSize(14)
-    doc.text(safeTitle, pageWidth - margin, margin, { align: 'right' })
-    doc.setFontSize(12)
+    doc.setFont("Times", "normal");
+    doc.setFontSize(14);
+    doc.text(safeTitle, pageWidth - margin, margin, { align: "right" });
+    doc.setFontSize(12);
     doc.text(
       `Date: ${new Date(letter.created_at).toLocaleDateString()}`,
       pageWidth - margin,
       margin + 18,
-      { align: 'right' }
-    )
+      { align: "right" }
+    );
 
-    const bodyYStart = margin + 40
-    const availableWidth = pageWidth - margin * 2
-    const bodyLines = doc.splitTextToSize(content || ' ', availableWidth)
-    doc.text(bodyLines, margin, bodyYStart, { maxWidth: availableWidth })
+    const bodyYStart = margin + 40;
+    const availableWidth = pageWidth - margin * 2;
+    const bodyLines = doc.splitTextToSize(content || " ", availableWidth);
+    doc.text(bodyLines, margin, bodyYStart, { maxWidth: availableWidth });
 
     const footerText = [
-      'Generated by Talk-To-My-Lawyer',
+      "Generated by Talk-To-My-Lawyer",
       footerReviewText,
-      footerDisclaimer
-    ]
+      footerDisclaimer,
+    ];
 
-    const footerYStart = pageHeight - margin - footerText.length * 14
+    const footerYStart = pageHeight - margin - footerText.length * 14;
     footerText.forEach((line, index) => {
-      doc.text(line, margin, footerYStart + index * 14, { maxWidth: availableWidth })
-    })
+      doc.text(line, margin, footerYStart + index * 14, {
+        maxWidth: availableWidth,
+      });
+    });
 
-    const pdfBytes = doc.output('arraybuffer')
+    const pdfBytes = doc.output("arraybuffer");
 
     return new NextResponse(Buffer.from(pdfBytes), {
       headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `inline; filename="${fileName}"`
-      }
-    })
-
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="${fileName}"`,
+      },
+    });
   } catch (error) {
-    console.error('[v0] PDF generation error:', error)
+    console.error("[v0] PDF generation error:", error);
     return NextResponse.json(
-      { error: 'Failed to generate PDF' },
+      { error: "Failed to generate PDF" },
       { status: 500 }
-    )
+    );
   }
 }

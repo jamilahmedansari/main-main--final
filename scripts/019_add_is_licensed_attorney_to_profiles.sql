@@ -1,10 +1,22 @@
--- Add is_licensed_attorney column to profiles table
+-- ============================================================================
+-- Script: 019_cleanup_is_licensed_attorney.sql
+-- Purpose: Remove unused is_licensed_attorney column from profiles
+-- 
+-- Reason: 
+--   - Only ONE admin exists in the system (the reviewing attorney)
+--   - Admin is identified by role='admin' in profiles table
+--   - Employees are salespeople, NOT lawyers - they never review letters
+--   - No need for a separate is_licensed_attorney flag
+--
+-- Business Model:
+--   - Subscriber: Creates letters (role='subscriber')
+--   - Employee: Sells service via coupons (role='employee') - NO letter access
+--   - Admin: Single licensed attorney who reviews all letters (role='admin')
+-- ============================================================================
+
+-- Remove the column if it exists (safe - uses IF EXISTS)
 ALTER TABLE profiles 
-ADD COLUMN IF NOT EXISTS is_licensed_attorney BOOLEAN DEFAULT FALSE;
+DROP COLUMN IF EXISTS is_licensed_attorney;
 
--- Grant access to authenticated users to read this column (if needed, usually profiles are public)
--- RLS policies usually handle this, but ensuring new column is accessible if RLS is stricter
--- Assuming existing RLS on profiles allows reading public columns.
-
--- Comment on column
-COMMENT ON COLUMN profiles.is_licensed_attorney IS 'Indicates if the user is a licensed attorney maintained by admin';
+-- Add clarifying comment to the role column
+COMMENT ON COLUMN profiles.role IS 'User role: subscriber (creates letters), employee (sells service - NOT a lawyer), admin (single licensed attorney who reviews all letters)';
