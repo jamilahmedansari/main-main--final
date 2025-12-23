@@ -454,7 +454,7 @@ export default function NewLandingPage() {
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {plan.popular && (
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold text-center py-2 rounded-t-lg">
+                    <div className="bg-linear-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold text-center py-2 rounded-t-lg">
                       MOST POPULAR
                     </div>
                   )}
