@@ -114,14 +114,17 @@ Visit `http://localhost:3000` to see the application.
 - View personal referral coupon codes
 - Track commission earnings (5% of subscription amount)
 - Monitor coupon usage statistics
-- **CANNOT** access letter content (security requirement)
+- **Employees are salespeople**, NOT lawyers - they sell the service
+- **CANNOT** access letter content (security requirement enforced via RLS)
 - **Access**: `/dashboard/coupons`, `/dashboard/commissions`
 
-### Admin
-- Review all pending letters
+### Admin (Single Licensed Attorney)
+- **There is exactly ONE admin** who is the licensed attorney
+- Review all pending letters in the Review Center
 - Edit letters manually or improve with AI assistance
-- Approve or reject letters
+- Approve or reject letters (attorney review)
 - View analytics and user management
+- PDF shows "reviewed by a licensed attorney" when admin approves
 - **Access**: `/secure-admin-gateway/*`
 
 ---

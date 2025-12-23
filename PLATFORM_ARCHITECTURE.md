@@ -240,7 +240,8 @@ export async function updateSession(request: NextRequest) {
 - Custom session tokens stored in httpOnly cookies
 - 30-minute session timeout with activity refresh
 - Environment-based credentials (not database)
-- Single admin model (no internal tiers)
+- Single admin model - the admin IS the licensed attorney who reviews all letters
+- Employees are salespeople (NOT lawyers) - they sell the service but cannot access letters
 
 **Code Breakdown**:
 

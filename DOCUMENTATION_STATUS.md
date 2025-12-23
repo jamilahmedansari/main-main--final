@@ -238,14 +238,18 @@ App will be available at: `http://localhost:3000`
 - Faster cold starts on Vercel
 - Excellent Vercel AI SDK support
 
-### 2. ✅ Single Admin User Model
+### 2. ✅ Single Admin User Model (Licensed Attorney)
 
-**Decision**: Exactly one admin user, no multi-admin support
+**Decision**: Exactly one admin user who IS the licensed attorney, no multi-admin support
 
 **Implementation**:
 - Admin role stored in `profiles.role = 'admin'`
+- Admin IS the licensed attorney who reviews ALL letters
 - Admin access via `/secure-admin-gateway` portal
 - Separate admin session management
+- PDF footer shows "reviewed by a licensed attorney" when `role='admin'` reviews
+- No `is_licensed_attorney` column needed - admin role = attorney by definition
+- Employees are salespeople (NOT lawyers) - they sell but never access letters
 
 ### 3. ✅ `is_super_user` is Business Logic, Not Authorization
 
